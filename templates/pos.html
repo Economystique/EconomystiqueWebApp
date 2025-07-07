@@ -120,14 +120,19 @@
 
                     const card = document.querySelector(`.product-card[data-id="${item.inv_id}"]`);
                     if (card) {
-                        const stockEl = card.querySelector('.stock');
-                        const remaining = originalStocks[item.inv_id] - item.quantity;
+                        const stockEl = card.querySelector('.product-infos .stock');
+                        let remaining = originalStocks[item.inv_id] - item.quantity;
+                        if (remaining < 0) remaining = 0;
                         if (stockEl) stockEl.textContent = `Stock: ${remaining}`;
 
                         if (remaining <= 0) {
                             card.classList.add('out-of-stock');
                             card.style.pointerEvents = 'none';
                             card.style.opacity = '0.5';
+                        } else {
+                            card.classList.remove('out-of-stock');
+                            card.style.pointerEvents = '';
+                            card.style.opacity = '';
                         }
                     }
                 });
@@ -214,7 +219,7 @@
             plusBtn.addEventListener('click', () => {
                 // Get product info from card
                 const card = document.querySelector(`.product-card[data-id="${id}"]`);
-                const name = card.querySelector('h3').textContent;
+                const name = card.querySelector('h5').textContent;
                 const price = parseFloat(card.querySelector('.price').textContent.replace(/[^\d.]/g, ''));
                 const stock = parseInt(card.querySelector('.stock').textContent.replace(/\D/g, ''));
                 if (stock <= 0) return;
@@ -252,12 +257,13 @@
         });
 
         productCards.forEach(card => {
-            const id = card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+            const id = card.getAttribute('data-id');
             if (id) {
-                const stockEl = card.querySelector('.stock');
+                // Use .product-infos .stock for the selector
+                const stockEl = card.querySelector('.product-infos .stock');
                 const stock = stockEl ? parseInt(stockEl.textContent.replace(/\D/g, '')) : 0;
                 originalStocks[id] = stock;
-
+                // 🔒 Immediately disable card if stock is 0
                 if (stock <= 0) {
                     card.classList.add('out-of-stock');
                     card.style.pointerEvents = 'none';
@@ -307,7 +313,7 @@
         function handleQtyInputChange(id, qtyInput) {
             let val = parseInt(qtyInput.value) || 0;
             const card = document.querySelector(`.product-card[data-id="${id}"]`);
-            const name = card.querySelector('h3').textContent;
+            const name = card.querySelector('h5').textContent;
             const price = parseFloat(card.querySelector('.price').textContent.replace(/[^\d.]/g, ''));
             const stock = parseInt(card.querySelector('.stock').textContent.replace(/\D/g, ''));
             val = Math.max(0, Math.min(val, stock));
