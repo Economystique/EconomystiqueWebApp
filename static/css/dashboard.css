@@ -1,9 +1,11 @@
-/* Dashboard DESIGN Layout. I deleted the dashboard.css. for some reason it was unlinked and now every design on the dashboard is at styles. too lazy to fix this, whatever. */
+/* Dashboard DESIGN Layout. */
 .dashboard-grid {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     padding: 1rem;
+    overflow-y: auto;
+    min-height: 100vh;
 }
 
 .top-cards-row {
@@ -121,7 +123,8 @@
     gap: 0.5rem;
 }
 
-.time-button, .comparison-button {
+.time-button,
+.comparison-button {
     padding: 0.25rem 0.75rem;
     border: 1px solid #e5e7eb;
     border-radius: 0.25rem;
@@ -130,7 +133,6 @@
     color: #4a5568;
     font-size: 0.875rem;
     margin-left: 0.5rem;
-    cursor: pointer;
     transition: all 0.2s ease;
 }
 
@@ -138,12 +140,6 @@
     background-color: transparent;
     color: #215E7D;
     border: 1px solid #215E7D;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    margin-left: 0.5rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .comparison-button:hover {
@@ -168,7 +164,7 @@ ul {
     list-style: none;
 }
 
-/* Alert Messages */
+/* Alerts */
 .alert {
     padding: 1rem;
     margin-bottom: 1rem;
@@ -183,13 +179,6 @@ ul {
 .alert-error {
     background-color: #fed7d7;
     color: #c53030;
-}
-
-/* Grid Layout for Dashboard */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
 }
 
 /* Tables */
@@ -211,364 +200,239 @@ ul {
     background-color: #f7fafc;
 }
 
-/* RESPONSIVE DESIGN - MEDIA QUERIES */
+/* ===================== RESPONSIVE ===================== */
 
-/* Large Desktop (1200px and up) */
+/* Large Desktop */
 @media (min-width: 1200px) {
     .dashboard-grid {
         padding: 1.5rem;
         gap: 2rem;
     }
-    
-    .top-cards-row {
-        gap: 2rem;
-    }
-    
+
+    .top-cards-row,
     .bottom-section {
         gap: 2rem;
     }
-    
-    .small-card {
-        height: 350px;
-    }
-    
+
+    .small-card,
     .chart-container {
         height: 350px;
     }
 }
 
-/* Desktop (992px to 1199px) */
+/* Desktop */
 @media (max-width: 1199px) and (min-width: 992px) {
     .dashboard-grid {
         padding: 1.25rem;
         gap: 1.75rem;
     }
-    
-    .top-cards-row {
-        gap: 1.75rem;
-    }
-    
+
+    .top-cards-row,
     .bottom-section {
         gap: 1.75rem;
     }
-    
-    .small-card {
-        height: 320px;
-    }
-    
+
+    .small-card,
     .chart-container {
         height: 320px;
     }
 }
 
-/* Tablet (768px to 991px) */
+/* Tablet */
 @media (max-width: 991px) and (min-width: 768px) {
     .dashboard-grid {
         padding: 1rem;
         gap: 1.25rem;
     }
-    
+
     .top-cards-row {
         grid-template-columns: repeat(2, 1fr);
         gap: 1.25rem;
     }
-    
+
     .bottom-section {
         grid-template-columns: 1fr;
         gap: 1.25rem;
     }
-    
-    .small-card {
-        height: 280px;
-    }
-    
+
+    .small-card,
     .chart-container {
         height: 280px;
     }
-    
-    .card-title {
-        padding: 0.6rem 1.25rem;
-        font-size: 1rem;
-    }
-    
+
+    .card-title,
     .product-item {
         padding: 0.6rem 1.25rem;
     }
-    
+
     .bottom-card {
         padding: 1.25rem;
     }
-    
+
     .performance-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
     }
-    
+
     .time-controls {
         flex-wrap: wrap;
     }
 }
 
-/* Mobile Large (576px to 767px) */
-@media (max-width: 767px) and (min-width: 576px) {
+/* Mobile Large (2x2 cards here) */
+@media (max-width: 767px) {
     .dashboard-grid {
         padding: 0.75rem;
         gap: 1rem;
+        overflow-y: auto;
+        min-height: 100vh;
     }
-    
+
     .top-cards-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
-    
+
     .bottom-section {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
-    
-    .small-card {
-        height: 250px;
-    }
-    
+
+    .small-card,
     .chart-container {
         height: 250px;
     }
-    
+
     .card-title {
         padding: 0.5rem 1rem;
         font-size: 0.95rem;
     }
-    
+
     .product-item {
         padding: 0.5rem 1rem;
+        font-size: 0.85rem;
     }
-    
+
     .product-info {
         gap: 0.75rem;
     }
-    
+
     .quantity {
         font-size: 0.8rem;
         min-width: 1.75rem;
     }
-    
+
     .product-name {
         font-size: 0.8rem;
     }
-    
+
     .bottom-card {
         padding: 1rem;
     }
-    
+
     .performance-title h2 {
         font-size: 1rem;
     }
-    
+
     .performance-stats {
         font-size: 0.8rem;
         padding: 0.6rem;
     }
-    
-    .time-button, .comparison-button {
+
+    .time-button,
+    .comparison-button {
         padding: 0.2rem 0.6rem;
         font-size: 0.8rem;
         margin-left: 0.3rem;
     }
 }
 
-/* Mobile Small (up to 575px) */
+/* Mobile Small */
 @media (max-width: 575px) {
-    .dashboard-grid {
-        padding: 0.5rem;
-        gap: 0.75rem;
-    }
-    
     .top-cards-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 0.75rem;
     }
-    
-    .bottom-section {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-    }
-    
-    .small-card {
-        height: 200px;
-    }
-    
-    .chart-container {
-        height: 200px;
-    }
-    
+
     .card-title {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
-    
+
     .product-item {
-        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
     }
-    
+
+    .quantity {
+        font-size: 0.7rem;
+    }
+
     .product-info {
         gap: 0.5rem;
-        flex-direction: column;
-        align-items: flex-start;
     }
-    
-    .quantity {
-        font-size: 0.75rem;
-        min-width: 1.5rem;
-        align-self: flex-start;
-    }
-    
-    .product-name {
-        font-size: 0.75rem;
-    }
-    
-    .bottom-card {
-        padding: 0.8rem;
-    }
-    
-    .performance-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.4rem;
-        margin-bottom: 0.8rem;
-    }
-    
-    .performance-title h2 {
-        font-size: 0.9rem;
-    }
-    
-    .performance-stats {
-        font-size: 0.75rem;
-        padding: 0.5rem;
-        margin-bottom: 0.8rem;
-    }
-    
-    .time-controls {
-        flex-wrap: wrap;
-        gap: 0.3rem;
-    }
-    
-    .time-button, .comparison-button {
-        padding: 0.15rem 0.5rem;
-        font-size: 0.75rem;
-        margin-left: 0;
-    }
-    
-    /* Make tables scrollable on mobile */
-    .table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-    
-    .table th,
-    .table td {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.8rem;
+
+    .small-card {
+        height: 200px;
     }
 }
 
-/* Extra Small Mobile (up to 375px) */
+/* Extra Small Devices */
 @media (max-width: 375px) {
-    .dashboard-grid {
-        padding: 0.4rem;
-        gap: 0.6rem;
-    }
-    
-    .top-cards-row {
-        gap: 0.6rem;
-    }
-    
-    .bottom-section {
-        gap: 0.6rem;
-    }
-    
-    .small-card {
-        height: 180px;
-    }
-    
-    .chart-container {
-        height: 180px;
-    }
-    
     .card-title {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.85rem;
+        font-size: 0.75rem;
     }
-    
+
+    .quantity,
+    .product-name {
+        font-size: 0.65rem;
+    }
+
+    .small-card {
+        height: 160px;
+    }
+
     .product-item {
-        padding: 0.3rem 0.6rem;
+        padding: 0.25rem 0.5rem;
     }
-    
+
     .bottom-card {
         padding: 0.6rem;
     }
-    
-    .performance-title h2 {
-        font-size: 0.85rem;
-    }
-    
-    .performance-stats {
-        font-size: 0.7rem;
-        padding: 0.4rem;
-    }
-    
-    .time-button, .comparison-button {
+
+    .time-button,
+    .comparison-button {
         padding: 0.1rem 0.4rem;
         font-size: 0.7rem;
     }
-    
-    .table th,
-    .table td {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.75rem;
-    }
 }
 
-/* Landscape orientation adjustments for mobile */
+/* Landscape */
 @media (max-width: 767px) and (orientation: landscape) {
-    .small-card {
-        height: 150px;
-    }
-    
+    .small-card,
     .chart-container {
         height: 150px;
     }
-    
-    .dashboard-grid {
-        gap: 0.5rem;
-    }
-    
-    .top-cards-row {
-        gap: 0.5rem;
-    }
-    
+
+    .dashboard-grid,
+    .top-cards-row,
     .bottom-section {
         gap: 0.5rem;
     }
 }
 
-/* High contrast mode support */
+/* High Contrast */
 @media (prefers-contrast: high) {
     .card {
         border: 2px solid #000;
     }
-    
-    .card-title {
-        border-bottom: 2px solid #000;
-    }
-    
+
+    .card-title,
     .product-item {
         border-bottom: 2px solid #000;
     }
 }
 
-/* Reduced motion support */
+/* Reduce Motion */
 @media (prefers-reduced-motion: reduce) {
     .card,
     .product-item,
@@ -578,29 +442,99 @@ ul {
     }
 }
 
-/* Print styles */
+/* Print */
 @media print {
     .dashboard-grid {
         padding: 0;
         gap: 1rem;
     }
-    
+
     .card {
         box-shadow: none;
         border: 1px solid #000;
         break-inside: avoid;
     }
-    
-    .small-card {
-        height: auto;
-        min-height: 200px;
-    }
-    
+
+    .small-card,
     .chart-container {
         height: 200px;
     }
-    
+
     .time-controls {
         display: none;
     }
 }
+
+/* MOBILE COLLAPSIBLE CARDS - SHOW HEADERS ONLY INITIALLY */
+@media (max-width: 767px) {
+    .dashboard-grid {
+      padding: 0.75rem;
+      gap: 0.5rem;
+    }
+  
+    .top-cards-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  
+    .collapsible-card {
+      overflow: hidden;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      margin: 0;
+    }
+  
+    .collapsible-card .card-body {
+      display: none;
+      padding: 0 1rem 1rem;
+    }
+  
+    .collapsible-card .collapsible-header {
+      padding: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+  
+    .top-products .collapsible-header { background-color: #f0ad4e; }
+    .least-sold .collapsible-header { background-color: #337ab7; }
+    .near-expiry .collapsible-header { background-color: #d9534f; }
+    .critical-items .collapsible-header { background-color: #5a5a5a; }
+  
+    .dropdown-icon {
+      margin-left: auto;
+      transition: transform 0.3s ease;
+    }
+  
+    .collapsible-card.expanded .card-body {
+      display: block;
+    }
+  
+    .collapsible-card.expanded .dropdown-icon {
+      transform: rotate(180deg);
+    }
+  }
+  
+
+  @media (max-width: 767px) {
+    .top-cards-row {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      /* Make all cards have 0 margin except bottom */
+      .collapsible-card {
+        margin-bottom: 0.5rem;
+        transition: margin-bottom 0.3s ease;
+      }
+      
+      /* When expanded, push the next header down */
+      .collapsible-card.expanded {
+        margin-bottom: 1.5rem; /* More space when open */
+      }
+    }      
+  
