@@ -30,7 +30,7 @@
 
         <div class="products-grid">
             {% for product in products %}
-            <div class="product-card" data-name="{{ product.name | lower }}" onclick="addToCart('{{ product.id }}', '{{ product.name }}', {{ product.price }}, {{ product.stock }})">
+            <div class="product-card" data-name="{{ product.name | lower }}" data-id="{{ product.id }}">
                 <div class="product-image-small">
                     {% if product.image %}
                     <img src="{{ url_for('static', filename='img/products/' + product.image) }}" alt="{{ product.name }}">
@@ -39,9 +39,14 @@
                     {% endif %}
                 </div>
                 <div class="product-infos">
-                    <h3>{{ product.name }}</h3>
+                    <h4>{{ product.name }}</h4>
                     <p class="price">₱{{ "{:,.2f}".format(product.price) }}</p>
                     <p class="stock">Stock: {{ product.stock }}</p>
+                    <div class="qty-selector" data-id="{{ product.id }}">
+                        <button class="qty-btn minus" type="button">-</button>
+                        <input class="qty-input" type="text" value="0" />
+                        <button class="qty-btn plus" type="button">+</button>
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -103,7 +108,7 @@
                     tbody.appendChild(row);
                     subtotal += item.total;
 
-                    const card = document.querySelector(`.product-card[onclick*="'${item.inv_id}'"]`);
+                    const card = document.querySelector(`.product-card[data-id="${item.inv_id}"]`);
                     if (card) {
                         const stockEl = card.querySelector('.stock');
                         const remaining = originalStocks[item.inv_id] - item.quantity;
@@ -127,7 +132,7 @@
     }
 
     function addToCart(id, name, price, stock) {
-        const card = document.querySelector(`.product-card[onclick*="'${id}'"]`);
+        const card = document.querySelector(`.product-card[data-id="${id}"]`);
         const stockEl = card?.querySelector('.stock');
         const currentStock = stockEl ? parseInt(stockEl.textContent.replace(/\D/g, '')) : 0;
 
@@ -159,7 +164,7 @@
                 if (data.status === 'cleared') {
                     updateCartUI();
                     document.querySelectorAll('.product-card').forEach(card => {
-                        const id = card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+                        const id = card.getAttribute('data-id');
                         const stockEl = card.querySelector('.stock');
                         if (stockEl) stockEl.textContent = `Stock: ${originalStocks[id]}`;
                         card.classList.remove('out-of-stock');
@@ -176,8 +181,58 @@
         const productCards = document.querySelectorAll('.product-card');
         window.originalStocks = {};
 
+        // --- Quantity Selector Logic ---
+        // Map to track current cart quantities
+        window.cartQuantities = {};
+
+        // Attach event listeners to plus/minus buttons
+        document.querySelectorAll('.qty-selector').forEach(selector => {
+            const id = selector.getAttribute('data-id');
+            const plusBtn = selector.querySelector('.plus');
+            const minusBtn = selector.querySelector('.minus');
+            const qtyInput = selector.querySelector('.qty-input');
+            plusBtn.addEventListener('click', () => {
+                // Get product info from card
+                const card = document.querySelector(`.product-card[data-id="${id}"]`);
+                const name = card.querySelector('h3').textContent;
+                const price = parseFloat(card.querySelector('.price').textContent.replace(/[^\d.]/g, ''));
+                const stock = parseInt(card.querySelector('.stock').textContent.replace(/\D/g, ''));
+                if (stock <= 0) return;
+                addToCart(id, name, price, stock);
+            });
+            minusBtn.addEventListener('click', () => {
+                // Only decrease if quantity > 0
+                if ((window.cartQuantities[id] || 0) > 0) {
+                    fetch('/remove_from_pos_cart', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ inv_id: id })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            updateCartUI();
+                        }
+                    });
+                }
+            });
+            // Allow direct input
+            qtyInput.addEventListener('input', (e) => {
+                // Only allow numbers
+                qtyInput.value = qtyInput.value.replace(/[^\d]/g, '');
+            });
+            qtyInput.addEventListener('blur', () => {
+                handleQtyInputChange(id, qtyInput);
+            });
+            qtyInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    qtyInput.blur();
+                }
+            });
+        });
+
         productCards.forEach(card => {
-        const id = card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+        const id = card.getAttribute('data-id');
         if (id) {
             const stockEl = card.querySelector('.stock');
             const stock = stockEl ? parseInt(stockEl.textContent.replace(/\D/g, '')) : 0;
@@ -203,6 +258,84 @@
             });
             document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
         });
+
+        // Update quantity selectors when cart changes
+        window.updateQtySelectors = function(cart) {
+            // Reset all to 0
+            document.querySelectorAll('.qty-input').forEach(input => input.value = 0);
+            window.cartQuantities = {};
+            cart.forEach(item => {
+                window.cartQuantities[item.inv_id] = item.quantity;
+                const selector = document.querySelector(`.qty-selector[data-id="${item.inv_id}"]`);
+                if (selector) {
+                    selector.querySelector('.qty-input').value = item.quantity;
+                }
+            });
+        };
+
+        // Patch updateCartUI to also update qty selectors
+        const origUpdateCartUI = updateCartUI;
+        updateCartUI = function() {
+            fetch('/get_pos_cart')
+                .then(response => response.json())
+                .then(cart => {
+                    window.updateQtySelectors(cart);
+                    origUpdateCartUI();
+                });
+        };
+
+        // Handle direct input change
+        function handleQtyInputChange(id, qtyInput) {
+            let val = parseInt(qtyInput.value) || 0;
+            const card = document.querySelector(`.product-card[data-id="${id}"]`);
+            const name = card.querySelector('h3').textContent;
+            const price = parseFloat(card.querySelector('.price').textContent.replace(/[^\d.]/g, ''));
+            const stock = parseInt(card.querySelector('.stock').textContent.replace(/\D/g, ''));
+            val = Math.max(0, Math.min(val, stock));
+            const current = window.cartQuantities[id] || 0;
+            if (val > current) {
+                // Add as many as needed
+                const toAdd = val - current;
+                let addCount = 0;
+                function addNext() {
+                    if (addCount < toAdd) {
+                        addToCart(id, name, price, stock);
+                        addCount++;
+                        setTimeout(addNext, 80); // avoid flooding
+                    } else {
+                        updateCartUI();
+                    }
+                }
+                addNext();
+            } else if (val < current) {
+                // Remove as many as needed
+                const toRemove = current - val;
+                let removeCount = 0;
+                function removeNext() {
+                    if (removeCount < toRemove) {
+                        fetch('/remove_from_pos_cart', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ inv_id: id })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                removeCount++;
+                                setTimeout(removeNext, 80);
+                            } else {
+                                updateCartUI();
+                            }
+                        });
+                    } else {
+                        updateCartUI();
+                    }
+                }
+                removeNext();
+            } else {
+                updateCartUI();
+            }
+        }
 
         updateCartUI();
     });
