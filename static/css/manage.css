@@ -521,3 +521,675 @@
     border-radius: 6px;
 }
 
+/* RESPONSIVE DESIGN - MEDIA QUERIES */
+
+/* Large Desktop (1200px and up) */
+@media (min-width: 1200px) {
+    .content-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .content-container {
+        height: 600px;
+        padding: 15px;
+    }
+    
+    .content-container-add {
+        height: 600px;
+        padding: 15px;
+    }
+    
+    .adding-section,
+    .table-section,
+    .add-new-wrapper {
+        padding: 25px;
+    }
+    
+    .add-head h3 {
+        font-size: 28px;
+    }
+    
+    .form-group label {
+        font-size: 20px;
+    }
+    
+    .form-group select,
+    .form-group input[type="number"],
+    .form-group input[type="date"] {
+        padding: 16px 14px;
+        font-size: 16px;
+    }
+    
+    .inventory-table {
+        font-size: 16px;
+    }
+    
+    .inventory-table th,
+    .inventory-table td {
+        padding: 14px 18px;
+    }
+}
+
+/* Desktop (992px to 1199px) */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .content-header h1 {
+        font-size: 1.6rem;
+    }
+    
+    .content-container {
+        height: 550px;
+        padding: 12px;
+    }
+    
+    .content-container-add {
+        height: 550px;
+        padding: 12px;
+    }
+    
+    .adding-section,
+    .table-section,
+    .add-new-wrapper {
+        padding: 22px;
+    }
+    
+    .add-head h3 {
+        font-size: 26px;
+    }
+    
+    .form-group label {
+        font-size: 19px;
+    }
+    
+    .form-group select,
+    .form-group input[type="number"],
+    .form-group input[type="date"] {
+        padding: 15px 13px;
+        font-size: 15px;
+    }
+    
+    .inventory-table {
+        font-size: 15px;
+    }
+    
+    .inventory-table th,
+    .inventory-table td {
+        padding: 13px 17px;
+    }
+}
+
+/* Tablet (768px to 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+    .content-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    .content-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .header-actions {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+    
+    .tab-container {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .tab-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+        margin-right: 0;
+    }
+    
+    .content-container {
+        flex-direction: column;
+        height: auto;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .content-container-add {
+        height: auto;
+        padding: 15px;
+    }
+    
+    .restock-container {
+        flex-direction: column;
+        height: auto;
+        gap: 15px;
+    }
+    
+    .adding-section,
+    .table-section {
+        height: auto;
+        padding: 20px;
+    }
+    
+    .add-new-wrapper {
+        height: auto;
+        padding: 20px;
+    }
+    
+    .add-form-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .add-head h3 {
+        font-size: 22px;
+    }
+    
+    .form-group label {
+        font-size: 16px;
+    }
+    
+    .form-group select,
+    .form-group input[type="number"],
+    .form-group input[type="date"] {
+        padding: 12px 10px;
+        font-size: 14px;
+    }
+    
+    .inventory-table {
+        font-size: 14px;
+    }
+    
+    .inventory-table th,
+    .inventory-table td {
+        padding: 10px 12px;
+    }
+    
+    .action-buttons-one,
+    .action-buttons-two {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn-add,
+    .btn-clear,
+    .btn-confirm,
+    .btn-cancel {
+        width: 100%;
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .add-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .add-confirm,
+    .add-cancel {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+/* Mobile Large (576px to 767px) */
+@media (max-width: 767px) and (min-width: 576px) {
+    .content-header {
+        margin-bottom: 1rem;
+    }
+    
+    .content-header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .tab-container {
+        flex-direction: column;
+        gap: 3px;
+    }
+    
+    .tab-btn {
+        padding: 8px 16px;
+        font-size: 13px;
+        margin-right: 0;
+        border-radius: 6px;
+        margin-bottom: 0;
+    }
+    
+    .content-container {
+        flex-direction: column;
+        height: auto;
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .content-container-add {
+        height: auto;
+        padding: 10px;
+    }
+    
+    .restock-container {
+        flex-direction: column;
+        height: auto;
+        gap: 10px;
+    }
+    
+    .adding-section,
+    .table-section {
+        height: auto;
+        padding: 15px;
+    }
+    
+    .add-new-wrapper {
+        height: auto;
+        padding: 15px;
+    }
+    
+    .add-form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .add-head h3 {
+        font-size: 20px;
+    }
+    
+    .form-group label {
+        font-size: 15px;
+    }
+    
+    .form-group select,
+    .form-group input[type="number"],
+    .form-group input[type="date"] {
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+    
+    .inventory-table {
+        font-size: 13px;
+        overflow-x: auto;
+        display: block;
+    }
+    
+    .inventory-table th,
+    .inventory-table td {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+    
+    .action-buttons-one,
+    .action-buttons-two {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .btn-add,
+    .btn-clear,
+    .btn-confirm,
+    .btn-cancel {
+        width: 100%;
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+    
+    .add-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .add-confirm,
+    .add-cancel {
+        width: 100%;
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    
+    .image-box {
+        padding: 15px;
+    }
+    
+    .btn-add-img {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+    
+    #image-preview {
+        max-width: 150px;
+        max-height: 150px;
+    }
+}
+
+/* Mobile Small (up to 575px) */
+@media (max-width: 575px) {
+    .content-header {
+        margin-bottom: 0.75rem;
+    }
+    
+    .content-header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .subtitle {
+        font-size: 0.75rem;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+    
+    .tab-container {
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .tab-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        margin-right: 0;
+        border-radius: 4px;
+        margin-bottom: 0;
+    }
+    
+    .content-container {
+        flex-direction: column;
+        height: auto;
+        gap: 8px;
+        padding: 8px;
+    }
+    
+    .content-container-add {
+        height: auto;
+        padding: 8px;
+    }
+    
+    .restock-container {
+        flex-direction: column;
+        height: auto;
+        gap: 8px;
+    }
+    
+    .adding-section,
+    .table-section {
+        height: auto;
+        padding: 12px;
+    }
+    
+    .add-new-wrapper {
+        height: auto;
+        padding: 12px;
+    }
+    
+    .add-form-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .add-head h3 {
+        font-size: 18px;
+    }
+    
+    .form-group label {
+        font-size: 14px;
+    }
+    
+    .form-group select,
+    .form-group input[type="number"],
+    .form-group input[type="date"] {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+    
+    .inventory-table {
+        font-size: 12px;
+        overflow-x: auto;
+        display: block;
+        min-width: 400px;
+    }
+    
+    .inventory-table th,
+    .inventory-table td {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    
+    .action-buttons-one,
+    .action-buttons-two {
+        padding: 10px 12px;
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .btn-add,
+    .btn-clear,
+    .btn-confirm,
+    .btn-cancel {
+        width: 100%;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .add-actions {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .add-confirm,
+    .add-cancel {
+        width: 100%;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    .image-box {
+        padding: 12px;
+    }
+    
+    .btn-add-img {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    #image-preview {
+        max-width: 120px;
+        max-height: 120px;
+    }
+    
+    .btn-remove-img {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+}
+
+/* Extra Small Mobile (up to 375px) */
+@media (max-width: 375px) {
+    .content-header h1 {
+        font-size: 1.1rem;
+    }
+    
+    .subtitle {
+        font-size: 0.7rem;
+    }
+    
+    .tab-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+    
+    .content-container {
+        padding: 6px;
+    }
+    
+    .content-container-add {
+        padding: 6px;
+    }
+    
+    .adding-section,
+    .table-section {
+        padding: 10px;
+    }
+    
+    .add-new-wrapper {
+        padding: 10px;
+    }
+    
+    .add-head h3 {
+        font-size: 16px;
+    }
+    
+    .form-group label {
+        font-size: 13px;
+    }
+    
+    .form-group select,
+    .form-group input[type="number"],
+    .form-group input[type="date"] {
+        padding: 6px 4px;
+        font-size: 11px;
+    }
+    
+    .inventory-table {
+        font-size: 11px;
+        min-width: 350px;
+    }
+    
+    .inventory-table th,
+    .inventory-table td {
+        padding: 4px 6px;
+        font-size: 11px;
+    }
+    
+    .btn-add,
+    .btn-clear,
+    .btn-confirm,
+    .btn-cancel {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+    
+    .add-confirm,
+    .add-cancel {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+    
+    .image-box {
+        padding: 10px;
+    }
+    
+    .btn-add-img {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+    
+    #image-preview {
+        max-width: 100px;
+        max-height: 100px;
+    }
+    
+    .btn-remove-img {
+        padding: 3px 6px;
+        font-size: 10px;
+    }
+}
+
+/* Landscape orientation adjustments for mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .content-container {
+        flex-direction: row;
+        height: 400px;
+    }
+    
+    .content-container-add {
+        height: 400px;
+    }
+    
+    .restock-container {
+        flex-direction: row;
+        height: 100%;
+    }
+    
+    .adding-section,
+    .table-section {
+        height: 100%;
+    }
+    
+    .add-new-wrapper {
+        height: 100%;
+    }
+    
+    .add-form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .tab-btn {
+        border: 2px solid #000;
+    }
+    
+    .inventory-table {
+        border: 2px solid #000;
+    }
+    
+    .inventory-table th,
+    .inventory-table td {
+        border: 1px solid #000;
+    }
+    
+    .btn-add,
+    .btn-clear,
+    .btn-confirm,
+    .btn-cancel {
+        border: 2px solid currentColor;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .tab-btn,
+    .btn-add,
+    .btn-clear,
+    .btn-confirm,
+    .btn-cancel,
+    .inventory-table tbody tr {
+        transition: none;
+    }
+}
+
+/* Print styles */
+@media print {
+    .tab-container,
+    .header-actions,
+    .action-buttons-one,
+    .action-buttons-two,
+    .add-actions {
+        display: none !important;
+    }
+    
+    .content-container,
+    .content-container-add {
+        height: auto;
+        padding: 0;
+    }
+    
+    .inventory-table {
+        overflow: visible;
+        display: table;
+        min-width: auto;
+    }
+    
+    .inventory-table th {
+        background-color: #000 !important;
+        color: #fff !important;
+    }
+}
+

@@ -392,3 +392,530 @@
         opacity: 1;
     }
 }
+
+/* RESPONSIVE DESIGN - MEDIA QUERIES */
+
+/* Large Desktop (1200px and up) */
+@media (min-width: 1200px) {
+    .whole-container {
+        padding: 15px;
+    }
+    
+    .card {
+        gap: 30px;
+        padding: 30px;
+    }
+    
+    .card.personal-container {
+        height: 400px;
+        padding: 100px;
+        padding-left: 250px;
+    }
+    
+    .card.business-container {
+        height: 550px;
+        padding: 180px;
+        padding-left: 140px;
+    }
+    
+    .avatar-img, .biz-logo-img {
+        width: 320px;
+        height: 320px;
+    }
+    
+    .avatar-circle {
+        width: 320px;
+        height: 320px;
+    }
+    
+    .biz-logo {
+        width: 320px;
+        height: 320px;
+    }
+    
+    .owner-name, .biz-name {
+        font-size: 45px;
+    }
+    
+    .info-line {
+        font-size: 28px;
+    }
+    
+    .section-label {
+        font-size: 22px;
+    }
+}
+
+/* Desktop (992px to 1199px) */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .whole-container {
+        padding: 12px;
+    }
+    
+    .card {
+        gap: 25px;
+        padding: 25px;
+    }
+    
+    .card.personal-container {
+        height: 380px;
+        padding: 70px;
+        padding-left: 180px;
+    }
+    
+    .card.business-container {
+        height: 520px;
+        padding: 130px;
+        padding-left: 100px;
+    }
+    
+    .avatar-img, .biz-logo-img {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .avatar-circle {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .biz-logo {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .owner-name, .biz-name {
+        font-size: 42px;
+    }
+    
+    .info-line {
+        font-size: 26px;
+    }
+}
+
+/* Tablet (768px to 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+    .whole-container {
+        padding: 10px;
+    }
+    
+    .card {
+        gap: 20px;
+        padding: 20px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .card.personal-container {
+        height: auto;
+        padding: 40px 20px;
+        padding-left: 20px;
+    }
+    
+    .card.business-container {
+        height: auto;
+        padding: 40px 20px;
+        padding-left: 20px;
+    }
+    
+    .avatar-img, .biz-logo-img {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .avatar-circle {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .biz-logo {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .personal-text {
+        padding-left: 0;
+        align-items: center;
+    }
+    
+    .biz-text {
+        padding-left: 0;
+        align-items: center;
+    }
+    
+    .owner-name, .biz-name {
+        font-size: 32px;
+        text-align: center;
+    }
+    
+    .info-line {
+        font-size: 20px;
+        text-align: center;
+    }
+    
+    .section-label {
+        font-size: 18px;
+        text-align: center;
+    }
+    
+    .edit-btn {
+        top: 12px;
+        right: 12px;
+        font-size: 15px;
+        padding: 7px 20px;
+    }
+    
+    .avatar-upload-btn {
+        top: 80px;
+        left: 100px;
+        width: 35px;
+        height: 35px;
+        font-size: 1.3em;
+    }
+}
+
+/* Mobile Large (576px to 767px) */
+@media (max-width: 767px) and (min-width: 576px) {
+    .whole-container {
+        padding: 8px;
+    }
+    
+    .card {
+        gap: 15px;
+        padding: 15px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .card.personal-container {
+        height: auto;
+        padding: 30px 15px;
+        padding-left: 15px;
+    }
+    
+    .card.business-container {
+        height: auto;
+        padding: 30px 15px;
+        padding-left: 15px;
+    }
+    
+    .avatar-img, .biz-logo-img {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .avatar-circle {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .biz-logo {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .personal-text {
+        padding-left: 0;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .biz-text {
+        padding-left: 0;
+        align-items: center;
+    }
+    
+    .owner-name, .biz-name {
+        font-size: 28px;
+        text-align: center;
+        margin: 0 0 10px 0;
+    }
+    
+    .info-line {
+        font-size: 18px;
+        text-align: center;
+    }
+    
+    .section-label {
+        font-size: 16px;
+        text-align: center;
+    }
+    
+    .edit-btn {
+        top: 10px;
+        right: 10px;
+        font-size: 14px;
+        padding: 6px 16px;
+    }
+    
+    .avatar-upload-btn {
+        top: 60px;
+        left: 75px;
+        width: 30px;
+        height: 30px;
+        font-size: 1.2em;
+    }
+    
+    .change-username-link {
+        font-size: 18px;
+    }
+}
+
+/* Mobile Small (up to 575px) */
+@media (max-width: 575px) {
+    .whole-container {
+        padding: 5px;
+    }
+    
+    .card {
+        gap: 12px;
+        padding: 12px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 16px;
+    }
+    
+    .card.personal-container {
+        height: auto;
+        padding: 20px 12px;
+        padding-left: 12px;
+    }
+    
+    .card.business-container {
+        height: auto;
+        padding: 20px 12px;
+        padding-left: 12px;
+    }
+    
+    .avatar-img, .biz-logo-img {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .avatar-circle {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .biz-logo {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .personal-text {
+        padding-left: 0;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .biz-text {
+        padding-left: 0;
+        align-items: center;
+    }
+    
+    .owner-name, .biz-name {
+        font-size: 24px;
+        text-align: center;
+        margin: 0 0 8px 0;
+    }
+    
+    .info-line {
+        font-size: 16px;
+        text-align: center;
+        margin: 3px 0;
+    }
+    
+    .section-label {
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 3px;
+    }
+    
+    .edit-btn {
+        top: 8px;
+        right: 8px;
+        font-size: 12px;
+        padding: 5px 12px;
+    }
+    
+    .avatar-upload-btn {
+        top: 50px;
+        left: 60px;
+        width: 25px;
+        height: 25px;
+        font-size: 1em;
+    }
+    
+    .change-username-link {
+        font-size: 16px;
+    }
+    
+    .file-upload-label {
+        font-size: 0.8em;
+        margin-bottom: 8px;
+    }
+}
+
+/* Extra Small Mobile (up to 375px) */
+@media (max-width: 375px) {
+    .whole-container {
+        padding: 3px;
+    }
+    
+    .card {
+        gap: 10px;
+        padding: 10px;
+        margin-bottom: 12px;
+    }
+    
+    .card.personal-container {
+        padding: 15px 10px;
+        padding-left: 10px;
+    }
+    
+    .card.business-container {
+        padding: 15px 10px;
+        padding-left: 10px;
+    }
+    
+    .avatar-img, .biz-logo-img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .avatar-circle {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .biz-logo {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .owner-name, .biz-name {
+        font-size: 20px;
+        margin: 0 0 6px 0;
+    }
+    
+    .info-line {
+        font-size: 14px;
+        margin: 2px 0;
+    }
+    
+    .section-label {
+        font-size: 12px;
+        margin-bottom: 2px;
+    }
+    
+    .edit-btn {
+        top: 6px;
+        right: 6px;
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+    
+    .avatar-upload-btn {
+        top: 40px;
+        left: 50px;
+        width: 22px;
+        height: 22px;
+        font-size: 0.9em;
+    }
+    
+    .change-username-link {
+        font-size: 14px;
+    }
+    
+    .file-upload-label {
+        font-size: 0.75em;
+        margin-bottom: 6px;
+    }
+}
+
+/* Landscape orientation adjustments for mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .card {
+        flex-direction: row;
+        text-align: left;
+        align-items: center;
+    }
+    
+    .card.personal-container {
+        padding: 20px;
+        padding-left: 20px;
+    }
+    
+    .card.business-container {
+        padding: 20px;
+        padding-left: 20px;
+    }
+    
+    .personal-text {
+        align-items: flex-start;
+    }
+    
+    .biz-text {
+        align-items: flex-start;
+    }
+    
+    .owner-name, .biz-name {
+        text-align: left;
+    }
+    
+    .info-line {
+        text-align: left;
+    }
+    
+    .section-label {
+        text-align: left;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .card {
+        border: 2px solid #000;
+    }
+    
+    .avatar-img, .biz-logo-img {
+        border: 3px solid #000;
+    }
+    
+    .edit-btn {
+        border: 2px solid #000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .edit-btn,
+    .avatar-upload-btn,
+    .bizlogo-upload-btn,
+    .change-username-link {
+        transition: none;
+    }
+}
+
+/* Print styles */
+@media print {
+    .edit-btn,
+    .avatar-upload-btn,
+    .bizlogo-upload-btn,
+    .file-upload-label {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #000;
+        break-inside: avoid;
+    }
+    
+    .avatar-img, .biz-logo-img {
+        border: 1px solid #000;
+    }
+}
