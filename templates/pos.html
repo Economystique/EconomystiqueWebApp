@@ -17,10 +17,6 @@
                 <!--img-->
             </div>
             <div class="product-info">
-                <!--the ff is a placeholder. hardcoded muna ;<-->
-                <h8>PT069</h8><br>
-                <h1>How to Run From the Mess You Made</h1><br>
-                <h4>Price: Everything you have</h4>
             </div>
             <div class="quantity">
                 <!--add-->
@@ -92,8 +88,8 @@
             .then(response => response.json())
             .then(cart => {
                 const tbody = document.querySelector('.cart-table tbody');
-                tbody.innerHTML = ''; // clear table
-
+                if (!tbody) return;
+                tbody.innerHTML = '';
                 let subtotal = 0;
 
                 cart.forEach(item => {
@@ -107,11 +103,17 @@
                     tbody.appendChild(row);
                     subtotal += item.total;
 
-                    // update stock on product card
                     const card = document.querySelector(`.product-card[onclick*="'${item.inv_id}'"]`);
                     if (card) {
                         const stockEl = card.querySelector('.stock');
-                        stockEl.textContent = `Stock: ${originalStocks[item.inv_id] - item.quantity}`;
+                        const remaining = originalStocks[item.inv_id] - item.quantity;
+                        if (stockEl) stockEl.textContent = `Stock: ${remaining}`;
+
+                        if (remaining <= 0) {
+                            card.classList.add('out-of-stock');
+                            card.style.pointerEvents = 'none';
+                            card.style.opacity = '0.5';
+                        }
                     }
                 });
 
@@ -120,78 +122,90 @@
                 document.getElementById('subtotal').textContent = `₱${subtotal.toFixed(2)}`;
                 document.getElementById('tax').textContent = `₱${tax.toFixed(2)}`;
                 document.getElementById('total').textContent = `₱${total.toFixed(2)}`;
-            });
+            })
+            .catch(err => console.error("Failed to update cart:", err));
     }
+
     function addToCart(id, name, price, stock) {
+        const card = document.querySelector(`.product-card[onclick*="'${id}'"]`);
+        const stockEl = card?.querySelector('.stock');
+        const currentStock = stockEl ? parseInt(stockEl.textContent.replace(/\D/g, '')) : 0;
+
+        if (currentStock <= 0) {
+            alert(`${name} is out of stock and cannot be added to the cart.`);
+            return;
+        }
+
         fetch('/add_to_pos_cart', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                inv_id: id,
-                inv_desc: name,
-                price: price
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ inv_id: id, inv_desc: name, price: price })
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
-                console.log(`${name} added to pos_cart`);
-                // Optionally call updateCartUI() here if you're syncing front-end cart
+                updateCartUI();
+            } else {
+                alert(data.message || "Failed to add to cart.");
             }
         })
-        .catch(error => console.error('Error:', error));
-        updateCartUI();
+        .catch(err => console.error("Error adding to cart:", err));
     }
+
     function clearCart() {
-        fetch('/clear_pos_cart', {
-            method: 'POST'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'cleared') {
-                updateCartUI(); // clear cart table
-
-                // reset all product card stock displays
-                document.querySelectorAll('.product-card').forEach(card => {
-                    const id = card.getAttribute('onclick').match(/'([^']+)'/)[1];
-                    const stockEl = card.querySelector('.stock');
-                    stockEl.textContent = `Stock: ${originalStocks[id]}`;
-                });
-            }
-        });
+        fetch('/clear_pos_cart', { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'cleared') {
+                    updateCartUI();
+                    document.querySelectorAll('.product-card').forEach(card => {
+                        const id = card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+                        const stockEl = card.querySelector('.stock');
+                        if (stockEl) stockEl.textContent = `Stock: ${originalStocks[id]}`;
+                        card.classList.remove('out-of-stock');
+                        card.style.pointerEvents = '';
+                        card.style.opacity = '';
+                    });
+                }
+            })
+            .catch(err => console.error("Error clearing cart:", err));
     }
-document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('searchProducts');
-    const productCards = Array.from(document.querySelectorAll('.product-card'));
 
-    function filterProducts() {
-        const searchTerm = searchInput.value.toLowerCase();
-        let visibleCount = 0;
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('searchProducts');
+        const productCards = document.querySelectorAll('.product-card');
+        window.originalStocks = {};
 
         productCards.forEach(card => {
-            const name = card.dataset.name;
-            const visible = name.includes(searchTerm);
-            card.style.display = visible ? '' : 'none';
-            if (visible) visibleCount++;
+        const id = card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+        if (id) {
+            const stockEl = card.querySelector('.stock');
+            const stock = stockEl ? parseInt(stockEl.textContent.replace(/\D/g, '')) : 0;
+            originalStocks[id] = stock;
+
+            // 🔒 Immediately disable card if stock is 0
+            if (stock <= 0) {
+                card.classList.add('out-of-stock');
+                card.style.pointerEvents = 'none';
+                card.style.opacity = '0.5';
+            }
+        }
+    });
+
+        searchInput?.addEventListener('input', () => {
+            const term = searchInput.value.toLowerCase();
+            let visible = 0;
+            productCards.forEach(card => {
+                const name = card.dataset.name;
+                const match = name.includes(term);
+                card.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
         });
 
-        document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
-    }
-
-    searchInput.addEventListener('input', filterProducts);
-    updateCartUI();
-
-});
-
-const originalStocks = {}; // store original stock values
-
-document.querySelectorAll('.product-card').forEach(card => {
-    const id = card.getAttribute('onclick').match(/'([^']+)'/)[1]; // extract product ID from onclick
-    const stockElement = card.querySelector('.stock');
-    const stock = parseInt(stockElement.textContent.replace(/\D/g, ''));
-    originalStocks[id] = stock;
-});
+        updateCartUI();
+    });
 </script>
 {% endblock %}
+
