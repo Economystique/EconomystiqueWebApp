@@ -106,6 +106,19 @@
                 tbody.innerHTML = '';
                 let total = 0;
 
+                // Reset all stock values and re-enable UI
+                productCards.forEach(card => {
+                    const id = card.getAttribute('data-id');
+                    const stockEl = card.querySelector('.stock');
+                    if (stockEl) stockEl.textContent = `Stock: ${originalStocks[id]}`;
+                    const plusBtn = card.querySelector('.plus');
+                    if (plusBtn) {
+                        plusBtn.disabled = false;
+                        plusBtn.style.opacity = '';
+                        plusBtn.style.cursor = '';
+                    }
+                });
+
                 cart.forEach(item => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -122,14 +135,22 @@
                         const stockEl = card.querySelector('.stock');
                         const remaining = originalStocks[item.inv_id] - item.quantity;
                         if (stockEl) stockEl.textContent = `Stock: ${remaining}`;
-
-                        if (remaining <= 0) {
-                            card.classList.add('out-of-stock');
-                            card.style.pointerEvents = 'none';
-                            card.style.opacity = '0.5';
+                        const plusBtn = card.querySelector('.plus');
+                        if (plusBtn) {
+                            if (remaining <= 0) {
+                                plusBtn.disabled = true;
+                                plusBtn.style.opacity = '0.5';
+                                plusBtn.style.cursor = 'not-allowed';
+                            } else {
+                                plusBtn.disabled = false;
+                                plusBtn.style.opacity = '';
+                                plusBtn.style.cursor = '';
+                            }
                         }
                     }
                 });
+
+                updateQtySelectors(cart);
 
                 const tax = total * 0.12;
                 const subtotal = total - tax;
@@ -141,12 +162,11 @@
     }
 
     function addToCart(id, name, price, stock) {
-        const card = document.querySelector(`.product-card[data-id="${id}"]`);
-        const stockEl = card?.querySelector('.stock');
-        const currentStock = stockEl ? parseInt(stockEl.textContent.replace(/\D/g, '')) : 0;
+        const currentQty = window.cartQuantities[id] || 0;
+        const remainingStock = originalStocks[id] - currentQty;
 
-        if (currentStock <= 0) {
-            alert(`${name} is out of stock and cannot be added to the cart.`);
+        if (remainingStock <= 0) {
+            alert(`${name} has no remaining stock to add.`);
             return;
         }
 
@@ -176,9 +196,12 @@
                         const id = card.getAttribute('data-id');
                         const stockEl = card.querySelector('.stock');
                         if (stockEl) stockEl.textContent = `Stock: ${originalStocks[id]}`;
-                        card.classList.remove('out-of-stock');
-                        card.style.pointerEvents = '';
-                        card.style.opacity = '';
+                        const plusBtn = card.querySelector('.plus');
+                        if (plusBtn) {
+                            plusBtn.disabled = false;
+                            plusBtn.style.opacity = '';
+                            plusBtn.style.cursor = '';
+                        }
                     });
                 }
             })
@@ -186,6 +209,8 @@
     }
 
     function checkout() {
+        const total = parseFloat(document.getElementById('total').textContent.replace(/[^\d.]/g, '')) || 0;
+        if (total <= 0) return;
         const modal = document.getElementById('confirmModal');
         if (modal) modal.classList.remove('hidden');
     }
@@ -197,30 +222,26 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const searchInput = document.getElementById('searchProducts');
-        const productCards = document.querySelectorAll('.product-card');
         window.originalStocks = {};
-
-        // --- Quantity Selector Logic ---
-        // Map to track current cart quantities
         window.cartQuantities = {};
 
-        // Attach event listeners to plus/minus buttons
+        window.productCards = document.querySelectorAll('.product-card');
+
+        // Attach event listeners
         document.querySelectorAll('.qty-selector').forEach(selector => {
             const id = selector.getAttribute('data-id');
             const plusBtn = selector.querySelector('.plus');
             const minusBtn = selector.querySelector('.minus');
             const qtyInput = selector.querySelector('.qty-input');
-            plusBtn.addEventListener('click', () => {
-                // Get product info from card
+
+            plusBtn.addEventListener('click', e => {
+                e.stopPropagation();
                 const card = document.querySelector(`.product-card[data-id="${id}"]`);
-                const name = card.querySelector('h3').textContent;
-                const price = parseFloat(card.querySelector('.price').textContent.replace(/[^\d.]/g, ''));
-                const stock = parseInt(card.querySelector('.stock').textContent.replace(/\D/g, ''));
-                if (stock <= 0) return;
-                addToCart(id, name, price, stock);
+                if (card) card.click();
             });
-            minusBtn.addEventListener('click', () => {
-                // Only decrease if quantity > 0
+
+            minusBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 if ((window.cartQuantities[id] || 0) > 0) {
                     fetch('/remove_from_pos_cart', {
                         method: 'POST',
@@ -235,34 +256,31 @@
                     });
                 }
             });
-            // Allow direct input
+
+            qtyInput.addEventListener('click', e => e.stopPropagation());
             qtyInput.addEventListener('input', (e) => {
-                // Only allow numbers
                 qtyInput.value = qtyInput.value.replace(/[^\d]/g, '');
             });
             qtyInput.addEventListener('blur', () => {
                 handleQtyInputChange(id, qtyInput);
             });
             qtyInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    qtyInput.blur();
-                }
+                if (e.key === 'Enter') qtyInput.blur();
             });
         });
 
         productCards.forEach(card => {
-            const id = card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
-            if (id) {
-                const stockEl = card.querySelector('.stock');
-                const stock = stockEl ? parseInt(stockEl.textContent.replace(/\D/g, '')) : 0;
-                originalStocks[id] = stock;
+            const id = card.getAttribute('data-id');
+            const name = card.querySelector('h4')?.textContent;
+            const price = parseFloat(card.querySelector('.price')?.textContent.replace(/[^\d.]/g, ''));
+            const stock = parseInt(card.querySelector('.stock')?.textContent.replace(/\D/g, ''));
 
-                if (stock <= 0) {
-                    card.classList.add('out-of-stock');
-                    card.style.pointerEvents = 'none';
-                    card.style.opacity = '0.5';
-                }
-            }
+            originalStocks[id] = stock;
+
+            card.addEventListener('click', e => {
+                if (e.target.closest('.minus')) return;
+                addToCart(id, name, price, stock);
+            });
         });
 
         searchInput?.addEventListener('input', () => {
@@ -277,9 +295,7 @@
             document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
         });
 
-        // Update quantity selectors when cart changes
         window.updateQtySelectors = function(cart) {
-            // Reset all to 0
             document.querySelectorAll('.qty-input').forEach(input => input.value = 0);
             window.cartQuantities = {};
             cart.forEach(item => {
@@ -291,80 +307,34 @@
             });
         };
 
-        // Patch updateCartUI to also update qty selectors
-        const origUpdateCartUI = updateCartUI;
-        updateCartUI = function() {
-            fetch('/get_pos_cart')
-                .then(response => response.json())
-                .then(cart => {
-                    window.updateQtySelectors(cart);
-                    origUpdateCartUI();
-                });
-        };
-
-        // Handle direct input change
         function handleQtyInputChange(id, qtyInput) {
             let val = parseInt(qtyInput.value) || 0;
+            const max = originalStocks[id];
+            val = Math.max(0, Math.min(val, max));
+            qtyInput.value = val;
+
             const card = document.querySelector(`.product-card[data-id="${id}"]`);
-            const name = card.querySelector('h3').textContent;
-            const price = parseFloat(card.querySelector('.price').textContent.replace(/[^\d.]/g, ''));
-            const stock = parseInt(card.querySelector('.stock').textContent.replace(/\D/g, ''));
-            val = Math.max(0, Math.min(val, stock));
-            const current = window.cartQuantities[id] || 0;
-            if (val > current) {
-                // Add as many as needed
-                const toAdd = val - current;
-                let addCount = 0;
-                function addNext() {
-                    if (addCount < toAdd) {
-                        addToCart(id, name, price, stock);
-                        addCount++;
-                        setTimeout(addNext, 80); // avoid flooding
-                    } else {
-                        updateCartUI();
-                    }
+            const name = card.querySelector('h4').textContent;
+
+            fetch('/set_pos_cart_quantity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ inv_id: id, inv_desc: name, quantity: val })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    updateCartUI();
                 }
-                addNext();
-            } else if (val < current) {
-                // Remove as many as needed
-                const toRemove = current - val;
-                let removeCount = 0;
-                function removeNext() {
-                    if (removeCount < toRemove) {
-                        fetch('/remove_from_pos_cart', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ inv_id: id })
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                removeCount++;
-                                setTimeout(removeNext, 80);
-                            } else {
-                                updateCartUI();
-                            }
-                        });
-                    } else {
-                        updateCartUI();
-                    }
-                }
-                removeNext();
-            } else {
-                updateCartUI();
-            }
+            });
         }
 
-        // Modal buttons
         document.getElementById('confirmCancelBtn')?.addEventListener('click', closeModal);
-
         document.getElementById('confirmYesBtn')?.addEventListener('click', () => {
-            // TODO: Replace with real checkout logic
             alert('Checkout confirmed! (Insert logic here)');
             closeModal();
         });
 
-        // Optional: Close modal when clicking outside the modal content
         const modal = document.getElementById('confirmModal');
         window.addEventListener('click', function (e) {
             if (e.target === modal) closeModal();

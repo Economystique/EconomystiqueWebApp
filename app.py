@@ -1166,6 +1166,42 @@ def clear_pos_cart():
     conn.close()
     return jsonify({'status': 'cleared'})
 
+@app.route('/set_pos_cart_quantity', methods=['POST'])
+def set_pos_cart_quantity():
+    data = request.get_json()
+    inv_id = data.get('inv_id')
+    quantity = int(data.get('quantity', 0))
+    inv_desc = data.get('inv_desc')
+
+    # 1. Connect to restock_db for updating cart
+    conn_cart = sqlite3.connect(os.path.join('db', 'restock_db.db'))
+    cursor_cart = conn_cart.cursor()
+
+    # 2. Remove existing entry first
+    cursor_cart.execute("DELETE FROM pos_cart WHERE inv_id = ?", (inv_id,))
+
+    if quantity > 0:
+        # 3. Connect to inventory_db to fetch price
+        conn_inv = sqlite3.connect(os.path.join('db', 'inventory_db.db'))
+        cursor_inv = conn_inv.cursor()
+
+        cursor_inv.execute("SELECT price FROM inv_static WHERE inv_id = ?", (inv_id,))
+        row = cursor_inv.fetchone()
+        conn_inv.close()
+
+        if row:
+            price = row[0]
+            total = price * quantity
+            cursor_cart.execute("""
+                INSERT INTO pos_cart (inv_id, inv_desc, quantity, price)
+                VALUES (?, ?, ?, ?)
+            """, (inv_id, inv_desc, quantity, price))
+
+    conn_cart.commit()
+    conn_cart.close()
+
+    return jsonify({'status': 'success'})
+
 @app.route('/account')
 @login_required
 def account():
