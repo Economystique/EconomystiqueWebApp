@@ -12,7 +12,6 @@
     justify-content: space-between;
     gap: 15px;
     padding: 0px;
-    background-color: blu   e;
 }
 
 /* Left-side content container */
@@ -91,27 +90,29 @@
 .bar-container {
     background-color: white;
     padding: 20px;
+    height: 550px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
 
+.bar-container canvas {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 95%;
+    margin-bottom: 10px;
+    object-fit: contain;
+    display: block;
 }
 
 /* Table container on the right */
-.table-months-container {
-    position: relative;
-    width: 300px;
-    background-color: white;
-    padding: 10px;
-    height: 737px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
+.table-months-container,
 .table-years-container {
     position: relative;
     width: 300px;
     background-color: white;
     padding: 10px;
-    height: 737px;
+    height: 550px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -232,11 +233,6 @@
     display: none;
 }
 
-.bar-container canvas {
-    max-width: 100%;
-    height: auto;
-}
-
 /* RESPONSIVE DESIGN - MEDIA QUERIES */
 
 /* Large Desktop (1200px and up) */
@@ -253,7 +249,7 @@
     .table-months-container,
     .table-years-container {
         width: 350px;
-        height: 800px;
+        height: 600px;
         padding: 15px;
     }
     
@@ -270,6 +266,7 @@
     
     .bar-container {
         padding: 25px;
+        height: 600px;
     }
     
     #monthYearTable,
@@ -303,7 +300,7 @@
     .table-months-container,
     .table-years-container {
         width: 320px;
-        height: 750px;
+        height: 570px;
         padding: 12px;
     }
     
@@ -320,6 +317,7 @@
     
     .bar-container {
         padding: 22px;
+        height: 570px;
     }
     
     #monthYearTable,
@@ -386,6 +384,7 @@
     
     .bar-container {
         padding: 15px;
+        height: 400px;
     }
     
     .table-months-container,
@@ -478,6 +477,7 @@
     
     .bar-container {
         padding: 12px;
+        height: 350px;
     }
     
     .table-months-container,
@@ -572,6 +572,7 @@
     
     .bar-container {
         padding: 10px;
+        height: 300px;
     }
     
     .table-months-container,
@@ -758,5 +759,27 @@
     #yearTable thead th {
         background-color: #000 !important;
         color: #fff !important;
+    }
+}
+
+.bar-container,
+.table-months-container,
+.table-years-container {
+    height: 550px;
+}
+
+@media (min-width: 1200px) {
+    .bar-container,
+    .table-months-container,
+    .table-years-container {
+        height: 600px;
+    }
+}
+
+@media (max-width: 1199px) and (min-width: 992px) {
+    .bar-container,
+    .table-months-container,
+    .table-years-container {
+        height: 570px;
     }
 }
