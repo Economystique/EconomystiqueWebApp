@@ -17,6 +17,7 @@
                 <!--img-->
             </div>
             <div class="product-info">
+                <!--add-->
             </div>
             <div class="quantity">
                 <!--add-->
@@ -39,7 +40,7 @@
                     {% endif %}
                 </div>
                 <div class="product-infos">
-                    <h4>{{ product.name }}</h4>
+                    <h5>{{ product.name }}</h5>
                     <p class="price">₱{{ "{:,.2f}".format(product.price) }}</p>
                     <p class="stock">Stock: {{ product.stock }}</p>
                     <div class="qty-selector" data-id="{{ product.id }}">
