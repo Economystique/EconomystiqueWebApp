@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Sales Forecast - Economystique{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sales_forecast.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Sales Forecast</h1>
+<div class="content-header">
+    <p class="subtitle">Get insights into your future sales trends</p>
+</div>
+
+<div class="container-whole">
+    <!--drop down for products-->
+    <div class="dropdown-container">
+        <form method="GET" action="{{ url_for('sales_forecast') }}">
+            <label for="product">Product:</label>
+            <select name="product" id="product">
+                {% for product in products %}
+                    <option value="{{ product.id }}" {% if product.id == selected_product_id %}selected{% endif %}>
+                        {{ product.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit">View Forecast</button>
+        </form>
+    </div>
+
+    <div class="data-container">
+        <!--chart-->
+        <div class="second-container">
+            <div class="canvas-container">
+                <canvas id="forecastChart"></canvas>
+            </div>
+        </div>
+
+        <!-- sales analysis -->
+        <div class="if-container">
+            {% if sales_trend_message %}
+            <div class="assessmet-container">
+                {{ sales_trend_message | safe }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/chart.umd.js') }}"></script>
+<script>
+    const labels = {{ labels | tojson }};
+    const actualData = {{ actual_data | tojson }};
+    const forecastDataFullLine = {{ forecast_data_full_line | tojson }};
+
+    const ctx = document.getElementById('forecastChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Actual Sales',
+                    data: actualData,
+                    backgroundColor: '#86ADA0',
+                    borderColor: '#86ADA0',
+                    borderWidth: 1,
+                    order: 2
+                },
+                {
+                    type: 'line',
+                    label: 'Forecasted Sales',
+                    data: forecastDataFullLine,
+                    borderColor: '#365B6D',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    pointRadius: 4,
+                    spanGaps: true,
+                    order: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+        x: {
+            title: {
+                display: true,
+                text: 'Month'
+            },
+            grid: {
+                display: false // remove vertical grid lines
+            }
+        },
+        y: {
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Quantity Sold'
+            },
+            grid: {
+                display: true // keeps horizontal grid lines
+            }
+        }
+    }
+        }
+    });
+</script>
+{% endblock %}

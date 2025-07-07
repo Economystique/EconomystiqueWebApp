@@ -1,0 +1,199 @@
+.test-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+/* Content Header */
+.content-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.content-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.subtitle {
+    color: #718096;
+    font-size: 0.875rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/*FIX YOUR NAMING CONVENTION!!!!*/
+.sale-content {
+    background: transparent;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.table-and-chart {
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.metrics-sidebar {
+    display: flex;
+    background-color: transparent;
+    flex-direction: column;
+    gap: 15px;
+    height: 80%;
+    width: 20%;
+    padding-top: 39px;
+}
+
+.metric-card {
+    background: #ffff;
+    border: 0.5px solid #b1b1b1;
+    border-radius: 10px;
+    padding: 2px;
+    height: 165px;
+    width: 313px;
+}
+
+.metric-card h3 {
+    margin: 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.metric-card .value {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.toggle-buttons {
+    display: flex;
+    background: #e8e6e6;
+    border-radius: 8px 8px 0 0;
+    border: 1.5px solid #89a3ad;
+    width: 267px;
+    margin-bottom: 2px;
+}
+
+.toggle-btn {
+    padding: 12px 24px;
+    border: none;
+    background: transparent;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.toggle-btn.active {
+    background: #89a3ad;
+    color: white;
+}
+
+.table-responsive {
+    flex: 1;
+    height: 50%;
+    width: auto;
+    overflow-y: auto;
+    max-height: 350px;
+}
+
+/* Center table headers horizontally */
+.table-responsive thead th {
+    text-align: center;
+}
+
+/* Center all table body cells horizontally too */
+.table-responsive tbody td {
+    text-align: center;
+    vertical-align: middle; /* keep it vertically centered */
+}
+
+.table thead th {
+    background-color: #89a3ad;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.chart-container {
+    background-color: white;
+    height: 350px;
+    width: auto;
+}
+
+.forecast-btn {
+    align-self: flex-end;
+}
+
+@media (max-width: 768px) {
+    .date-filter {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .date-filter .form-control {
+        width: 100%;
+    }
+}
+
+/*Date picker*/
+.date-picker,
+.year-dropdown,
+.flatpickr-input {
+    width: 150px;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px 8px 0px 0px;
+    font-size: 14px;
+    margin-left: 5px;
+    background-color: transparent;
+    color: #333;
+    cursor: pointer;
+    border-color: #89a3ad;
+    transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.date-picker:hover,
+.year-dropdown:hover,
+.flatpickr-input:hover {
+    border-color: #89a3ad;
+    background-color: #89a3ad;
+    color: white;
+}
+
+.date-picker:focus,
+.year-dropdown:focus,
+.flatpickr-input:focus {
+    outline: none;
+    border-color: #215E7D;
+    box-shadow: 0 0 0 2px rgba(33, 94, 125, 0.2);
+}
+
+.date-picker::placeholder {
+    text-align: center;
+  }
+
+.year-dropdown option {
+    background-color: white;
+    color: #333;
+}
+
+.year-dropdown option:hover {
+    background-color: #89a3ad;
+    color: white;
+}

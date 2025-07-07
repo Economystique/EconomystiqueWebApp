@@ -1,0 +1,523 @@
+/* Content Header */
+.content-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.content-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.subtitle {
+    color: #718096;
+    font-size: 0.875rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/*TABS*/
+.tab-container {
+    display: flex;
+    background-color: transparent;
+    padding-bottom: 3px;
+}
+
+.tab-btn {
+    display: flex;
+    border: 1px solid #89A3AD;
+    background-color: #e8e6e6;
+    color: black;
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+    margin-right: 2px;
+    padding: 12px 24px;
+    margin-bottom: 2px;
+}
+
+.tab-btn.active {
+    background-color: #89A3AD;
+    border: 1px solid #89A3AD;
+    color: white;
+}
+
+/* ─────────────── TAB: RESTOCK ───────────────*/
+.whole-container-tab {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 5px;
+    background-color: white;
+}
+
+.content-container {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    padding: 10px;
+    background-color: transparent;
+    height: 500px;
+    
+}
+
+.content-container {
+    display: flex;
+    padding: 10px;
+    background-color: white;
+    height: 500px;
+}
+
+.restock-container {
+    display: flex;
+    flex: 1; 
+    height: 100%; 
+    gap: 10px;
+}
+
+.adding-section,
+.table-section {
+    flex: 1; 
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    padding-bottom: 0px;
+    height: 100%; 
+}
+
+.form-group label {
+    font-size: 18px;
+}
+
+.form-group select,
+.form-group input[type="number"],
+.form-group input[type="date"] {
+    width: 100%;
+    padding: 14px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    transition: border 0.2s ease;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+    border-color: #2b5b64;
+    outline: none;
+    background-color: #fff;
+}
+
+/*TABLE in Restock*/
+.table-section {
+    border-radius: 10px;
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+}
+
+.table-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: flex-start; 
+    border: 1px solid #d1d1d1;
+    border-radius: 5px;
+}
+
+.inventory-table {
+    width: 100%;
+    height: auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-color: #ffffff;
+    font-size: 14px;
+    border: 1px solid #d1d1d1;
+}
+
+.inventory-table thead {
+    background-color: #2c6684;
+    color: #ffffff;
+}
+
+.inventory-table th,
+.inventory-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.inventory-table tbody tr:hover {
+    background-color: #f5f5f5;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.inventory-table th:first-child {
+    border-top-left-radius: 5px;
+}
+.inventory-table th:last-child {
+    border-top-right-radius: 5px;
+}
+
+/*buttons-restock*/
+.action-buttons-one {
+    flex: 1;
+    background-color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.btn-add{
+    padding: 7px 24px;
+    font-size: 16px;
+    border: 1px solid #2c6684;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: transparent;
+    color: #2c6684;
+    transition: background-color 0.3s ease;
+}
+
+.btn-add:hover {
+    background-color: #2c6684;
+    color: white;
+}
+
+.btn-clear {
+    padding: 7px 24px;
+    font-size: 16px;
+    border: 1px solid #8f2020;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: transparent;
+    color: #8f2020;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+}
+
+.btn-clear:hover {
+    background-color: #8f2020;
+    color: white;
+}
+
+.action-buttons-two {
+    flex: 1;
+    background-color: white;
+    padding: 32.5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-confirm {
+    padding:10px 80px; 
+    width: 20%;
+    font-size: 16px;
+    border: 1px solid #2c6684;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #2c6684;
+    color: white;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+}
+
+.btn-confirm:hover {
+    background-color: #204f66;
+}
+
+.btn-cancel {
+    padding:10px 80px; 
+    font-size: 16px;
+    width: 20%;
+    border: 1px solid #8f2020;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #8f2020;
+    color: white;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+}
+
+.btn-cancel:hover {
+    background-color: #6e1414;
+}
+
+/* ─────────────── TAB: NEW PRODUCT ───────────────*/
+.content-container-add {
+    background-color: white;
+}
+
+.add-new-wrapper { 
+    padding: 20px 10px;
+    background-color: transparent;
+    min-height: 200px;
+}
+
+/*head*/
+.add-head { 
+    display:flex; 
+    align-items:center; 
+    gap:8px; 
+    margin-bottom:18px; 
+}
+
+.add-head h3 { 
+    font-size: 18px; 
+    font-weight:600; 
+    margin:0; 
+}
+
+.info-icon { 
+    font-size:18px; 
+}
+
+/*forms*/
+.add-form-grid { 
+    display:flex; 
+    gap:40px; 
+    flex-wrap:wrap; 
+    padding: 50px;
+    padding-top: 5px;
+}
+
+.add-col { 
+    flex:1 1 260px; 
+    display:flex; 
+    flex-direction:column; 
+    gap:22px; 
+    padding: 10px;
+}
+
+.form-row label { 
+    font-weight:600; 
+    display:block; 
+    margin-bottom:6px; 
+}
+
+.form-row input,
+.form-row select {
+    width:100%; 
+    padding:10px 12px; 
+    border:1px solid #ccc;
+    border-radius:8px; 
+    background:#fafafa; 
+    }
+
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.custom-dropdown input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fafafa;
+    font-size: 14px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.custom-dropdown input:focus {
+    outline: none;
+    border-color: #2b5b64;
+    background-color: #fff;
+}
+
+.custom-dropdown input::placeholder {
+    color: #999;
+}
+
+/*Kim*/
+/* main Choices input box */
+.choices__inner {
+    border-radius: 8px !important; 
+    background-color: #f9f9f9;
+    border: 1px solid #ccc !important;
+    padding: 10px 12px;
+    font-size: 14px;
+    height: 47px;
+    
+}
+
+/* Remove focus border */
+.choices__inner:focus {
+    outline: none !important;
+}
+
+/* dropdown items */
+.choices__list--dropdown {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.choices__item--selectable {
+    color: #333;
+}
+
+/* Additional styles for better dropdown functionality */
+.choices__input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    padding: 0;
+    margin: 0;
+}
+
+.choices__input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.choices__list--single {
+    padding: 0;
+}
+
+.choices__item--choice {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.choices__item--choice:hover {
+    background-color: #f0f0f0;
+}
+
+.choices__item--choice.is-highlighted {
+    background-color: #e3f2fd;
+}
+
+/* Style for the "Add new" functionality */
+.choices__item--choice.choices__item--add {
+    background-color: #e8f5e8;
+    font-style: italic;
+}
+
+.choices__item--choice.choices__item--add:hover {
+    background-color: #d4edda;
+}
+/*Kim end*/
+
+.auto-id { 
+    color:#c0392b; 
+    font-weight:600; 
+}
+
+/*Image*/
+.image-box { 
+    width: 170px;
+    height: 170px;
+    border: 2px dashed #c6c6c6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    color: #777;
+}
+
+.btn-add-img { 
+    padding:6px 22px; 
+    color:#2c6684; 
+    border:none;
+    border-radius:6px; 
+    font-size:14px; 
+    cursor:pointer; 
+    border: 1px solid #2c6684;
+    background-color: transparent;
+    margin-left: 10px;
+}
+
+.btn-add-img:hover {
+    background-color: #204f66;
+    color: white;
+}
+
+.add-actions { 
+    margin-top: 0px; 
+    display: flex; 
+    gap: 40px; 
+    justify-content: center; 
+    background-color: white;
+    padding: 10px;
+    min-height: 60px;
+    align-items: center;
+}
+
+.add-confirm { 
+    padding:10px 80px; 
+    width: 20%;
+    font-size: 16px;
+    border: 1px solid #2c6684;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #2c6684;
+    color: white;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+}
+
+.add-confirm:hover {
+    background-color: #204f66;
+}
+
+.add-cancel { 
+    padding:10px 80px; 
+    font-size: 16px;
+    width: 20%;
+    border: 1px solid #8f2020;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #8f2020;
+    color: white;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+}
+
+.add-cancel:hover {
+    background-color: #6e1414;
+}
+
+/* Image upload styling */
+.btn-remove-img {
+    padding: 6px 22px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+    transition: background-color 0.3s ease;
+}
+
+.btn-remove-img:hover {
+    background-color: #c82333;
+}
+
+#image-preview {
+    transition: all 0.3s ease;
+}
+
+#image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
