@@ -34,7 +34,7 @@
 
         <div class="products-grid">
             {% for product in products %}
-            <div class="product-card" data-name="{{ product.name | lower }}" onclick="addToCart({{ product.id }}, '{{ product.name }}', {{ product.price }}, {{ product.stock }})">
+            <div class="product-card" data-name="{{ product.name | lower }}" onclick="addToCart('{{ product.id }}', '{{ product.name }}', {{ product.price }}, {{ product.stock }})">
                 <div class="product-image-small">
                     {% if product.image %}
                     <img src="{{ url_for('static', filename='img/products/' + product.image) }}" alt="{{ product.name }}">
@@ -87,6 +87,81 @@
 
 {% block extra_js %}
 <script>
+    function updateCartUI() {
+        fetch('/get_pos_cart')
+            .then(response => response.json())
+            .then(cart => {
+                const tbody = document.querySelector('.cart-table tbody');
+                tbody.innerHTML = ''; // clear table
+
+                let subtotal = 0;
+
+                cart.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.inv_desc}</td>
+                        <td>${item.quantity}</td>
+                        <td>₱${parseFloat(item.price).toFixed(2)}</td>
+                        <td>₱${parseFloat(item.total).toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(row);
+                    subtotal += item.total;
+
+                    // update stock on product card
+                    const card = document.querySelector(`.product-card[onclick*="'${item.inv_id}'"]`);
+                    if (card) {
+                        const stockEl = card.querySelector('.stock');
+                        stockEl.textContent = `Stock: ${originalStocks[item.inv_id] - item.quantity}`;
+                    }
+                });
+
+                const tax = subtotal * 0.12;
+                const total = subtotal + tax;
+                document.getElementById('subtotal').textContent = `₱${subtotal.toFixed(2)}`;
+                document.getElementById('tax').textContent = `₱${tax.toFixed(2)}`;
+                document.getElementById('total').textContent = `₱${total.toFixed(2)}`;
+            });
+    }
+    function addToCart(id, name, price, stock) {
+        fetch('/add_to_pos_cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                inv_id: id,
+                inv_desc: name,
+                price: price
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                console.log(`${name} added to pos_cart`);
+                // Optionally call updateCartUI() here if you're syncing front-end cart
+            }
+        })
+        .catch(error => console.error('Error:', error));
+        updateCartUI();
+    }
+    function clearCart() {
+        fetch('/clear_pos_cart', {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'cleared') {
+                updateCartUI(); // clear cart table
+
+                // reset all product card stock displays
+                document.querySelectorAll('.product-card').forEach(card => {
+                    const id = card.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    const stockEl = card.querySelector('.stock');
+                    stockEl.textContent = `Stock: ${originalStocks[id]}`;
+                });
+            }
+        });
+    }
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchProducts');
     const productCards = Array.from(document.querySelectorAll('.product-card'));
@@ -106,6 +181,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     searchInput.addEventListener('input', filterProducts);
+    updateCartUI();
+
+});
+
+const originalStocks = {}; // store original stock values
+
+document.querySelectorAll('.product-card').forEach(card => {
+    const id = card.getAttribute('onclick').match(/'([^']+)'/)[1]; // extract product ID from onclick
+    const stockElement = card.querySelector('.stock');
+    const stock = parseInt(stockElement.textContent.replace(/\D/g, ''));
+    originalStocks[id] = stock;
 });
 </script>
 {% endblock %}

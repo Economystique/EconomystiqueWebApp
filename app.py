@@ -1,4 +1,4 @@
-import os
+import os, sys
 import sqlite3
 import json
 import bcrypt
@@ -1103,10 +1103,68 @@ def pos():
             "name": row['inv_desc'],
             "price": row['price'],
             "stock": stock_map.get(inv_id, 0),
-            "image": None  # You can change this to handle actual image blob conversion if needed
+            "image": row['image']
         })
 
     return render_template('pos.html', products=products)
+
+# Flask route to add/update item in pos_cart
+@app.route('/add_to_pos_cart', methods=['POST'])
+def add_to_pos_cart():
+    data = request.get_json()
+    inv_id = data.get('inv_id')
+    inv_desc = data.get('inv_desc')
+    price = data.get('price')
+
+    conn = sqlite3.connect(os.path.join('db', 'restock_db.db'))
+    cursor = conn.cursor()
+
+    # Check if item already exists
+    cursor.execute("SELECT quantity FROM pos_cart WHERE inv_id = ?", (inv_id,))
+    result = cursor.fetchone()
+
+    if result:
+        # Increment quantity
+        cursor.execute("""
+            UPDATE pos_cart
+            SET quantity = quantity + 1
+            WHERE inv_id = ?
+        """, (inv_id,))
+    else:
+        # Insert new product with quantity = 1
+        cursor.execute("""
+            INSERT INTO pos_cart (inv_id, inv_desc, quantity, price)
+            VALUES (?, ?, 1, ?)
+        """, (inv_id, inv_desc, price))
+
+    conn.commit()
+    conn.close()
+    print("🛒 Product clicked:", inv_id, file=sys.stderr)
+    
+    return jsonify({'status': 'success'})
+
+@app.route('/get_pos_cart', methods=['GET'])
+def get_pos_cart():
+    conn = sqlite3.connect(os.path.join('db', 'restock_db.db'))
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT inv_id, inv_desc, quantity, price, quantity * price AS total
+        FROM pos_cart
+    """)
+    cart_items = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return jsonify(cart_items)
+
+@app.route('/clear_pos_cart', methods=['POST'])
+def clear_pos_cart():
+    conn = sqlite3.connect(os.path.join('db', 'restock_db.db'))
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM pos_cart")
+    conn.commit()
+    conn.close()
+    return jsonify({'status': 'cleared'})
 
 @app.route('/account')
 @login_required
