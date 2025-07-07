@@ -197,3 +197,439 @@
     background-color: #89a3ad;
     color: white;
 }
+
+/* RESPONSIVE DESIGN - MEDIA QUERIES */
+
+/* Large Desktop (1200px and up) */
+@media (min-width: 1200px) {
+    .content-header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .metric-card {
+        width: 350px;
+        height: 180px;
+    }
+    
+    .toggle-buttons {
+        width: 300px;
+    }
+    
+    .chart-container {
+        height: 400px;
+    }
+    
+    .table-responsive {
+        max-height: 400px;
+    }
+}
+
+/* Desktop (992px to 1199px) */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .content-header h1 {
+        font-size: 1.6rem;
+    }
+    
+    .metric-card {
+        width: 320px;
+        height: 170px;
+    }
+    
+    .toggle-buttons {
+        width: 280px;
+    }
+    
+    .chart-container {
+        height: 380px;
+    }
+    
+    .table-responsive {
+        max-height: 380px;
+    }
+}
+
+/* Tablet (768px to 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+    .content-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    .content-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .header-actions {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+    
+    .test-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .metrics-sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 20px;
+        gap: 10px;
+    }
+    
+    .metric-card {
+        width: 280px;
+        height: 150px;
+        flex-shrink: 0;
+    }
+    
+    .toggle-buttons {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto 10px auto;
+    }
+    
+    .toggle-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+    
+    .table-responsive {
+        max-height: 300px;
+    }
+    
+    .date-picker,
+    .year-dropdown,
+    .flatpickr-input {
+        width: 130px;
+        height: 35px;
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+}
+
+/* Mobile Large (576px to 767px) */
+@media (max-width: 767px) and (min-width: 576px) {
+    .content-header {
+        margin-bottom: 1rem;
+    }
+    
+    .content-header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .test-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .metrics-sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+        padding-top: 15px;
+        gap: 10px;
+    }
+    
+    .metric-card {
+        width: 100%;
+        max-width: 300px;
+        height: 120px;
+        margin: 0 auto;
+    }
+    
+    .metric-card h3 {
+        font-size: 0.85em;
+    }
+    
+    .metric-card .value {
+        font-size: 1.3em;
+        margin-top: 8px;
+    }
+    
+    .toggle-buttons {
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto 8px auto;
+    }
+    
+    .toggle-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+    
+    .table-responsive {
+        max-height: 250px;
+        overflow-x: auto;
+    }
+    
+    .table {
+        min-width: 500px;
+        font-size: 0.8rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+    
+    .date-picker,
+    .year-dropdown,
+    .flatpickr-input {
+        width: 120px;
+        height: 32px;
+        padding: 5px 8px;
+        font-size: 12px;
+        margin-left: 3px;
+    }
+}
+
+/* Mobile Small (up to 575px) */
+@media (max-width: 575px) {
+    .content-header {
+        margin-bottom: 0.75rem;
+    }
+    
+    .content-header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .subtitle {
+        font-size: 0.75rem;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+    
+    .test-container {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .metrics-sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+        padding-top: 10px;
+        gap: 8px;
+    }
+    
+    .metric-card {
+        width: 100%;
+        max-width: 280px;
+        height: 100px;
+        margin: 0 auto;
+        padding: 8px;
+    }
+    
+    .metric-card h3 {
+        font-size: 0.8em;
+    }
+    
+    .metric-card .value {
+        font-size: 1.2em;
+        margin-top: 6px;
+    }
+    
+    .toggle-buttons {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 6px auto;
+    }
+    
+    .toggle-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .chart-container {
+        height: 200px;
+    }
+    
+    .table-responsive {
+        max-height: 200px;
+        overflow-x: auto;
+    }
+    
+    .table {
+        min-width: 400px;
+        font-size: 0.75rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .date-picker,
+    .year-dropdown,
+    .flatpickr-input {
+        width: 100px;
+        height: 30px;
+        padding: 4px 6px;
+        font-size: 11px;
+        margin-left: 2px;
+    }
+}
+
+/* Extra Small Mobile (up to 375px) */
+@media (max-width: 375px) {
+    .content-header h1 {
+        font-size: 1.1rem;
+    }
+    
+    .subtitle {
+        font-size: 0.7rem;
+    }
+    
+    .metric-card {
+        max-width: 260px;
+        height: 90px;
+    }
+    
+    .metric-card h3 {
+        font-size: 0.75em;
+    }
+    
+    .metric-card .value {
+        font-size: 1.1em;
+        margin-top: 5px;
+    }
+    
+    .toggle-buttons {
+        max-width: 280px;
+    }
+    
+    .toggle-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+    
+    .chart-container {
+        height: 180px;
+    }
+    
+    .table-responsive {
+        max-height: 180px;
+    }
+    
+    .table {
+        min-width: 350px;
+        font-size: 0.7rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.7rem;
+    }
+    
+    .date-picker,
+    .year-dropdown,
+    .flatpickr-input {
+        width: 90px;
+        height: 28px;
+        padding: 3px 5px;
+        font-size: 10px;
+        margin-left: 1px;
+    }
+}
+
+/* Landscape orientation adjustments for mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .metrics-sidebar {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .metric-card {
+        width: 200px;
+        height: 80px;
+        flex-shrink: 0;
+    }
+    
+    .chart-container {
+        height: 150px;
+    }
+    
+    .table-responsive {
+        max-height: 150px;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .metric-card {
+        border: 2px solid #000;
+    }
+    
+    .toggle-buttons {
+        border: 2px solid #000;
+    }
+    
+    .table thead th {
+        border-bottom: 2px solid #000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .toggle-btn,
+    .date-picker,
+    .year-dropdown,
+    .flatpickr-input {
+        transition: none;
+    }
+}
+
+/* Print styles */
+@media print {
+    .header-actions,
+    .toggle-buttons,
+    .forecast-btn {
+        display: none !important;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+    
+    .table-responsive {
+        max-height: none;
+        overflow: visible;
+    }
+    
+    .table {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .table thead th {
+        background-color: #000 !important;
+        color: #fff !important;
+    }
+}

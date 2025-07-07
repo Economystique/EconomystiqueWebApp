@@ -105,6 +105,7 @@
 
             <!-- Top Header -->
             <div class="top-header">
+                <button class="hamburger-btn" aria-label="Open navigation" onclick="toggleSidebar()">&#9776;</button>
                 <button class="notifications-btn">🔔</button>
                 <div class="datetime-display" id="datetimeDisplay">
                     <div id="currentDate"></div>
@@ -131,6 +132,22 @@
         </div>
     </div>
     <script>
+        // Hamburger menu toggle for mobile
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('sidebar-open');
+        }
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const sidebar = document.querySelector('.sidebar');
+            const hamburger = document.querySelector('.hamburger-btn');
+            if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                sidebar.classList.remove('sidebar-open');
+            }
+        });
+        // Prevent closing when clicking inside sidebar
+        document.querySelector('.sidebar').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
         // Ensure proper scaling
         function setAppDimensions() {
             const container = document.querySelector('.window-container');
