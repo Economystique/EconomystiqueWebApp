@@ -81,17 +81,47 @@
         </div>
         <div class="cart-summary">
             <div><span>Subtotal</span><span id="subtotal">₱0.00</span></div>
-            <div><span>Tax (12%)</span><span id="tax">₱0.00</span></div>
+            <div><span>VAT (12%)</span><span id="tax">₱0.00</span></div>
             <div style="font-weight:bold;"><span>Total</span><span id="total">₱0.00</span></div>
             <button class="btn-checkout" onclick="checkout()">Checkout</button>
         </div>
     </div>
     <div id="confirmModal" class="modal hidden">
-        <div class="last-confirmation-content">
-            <h3>Are you sure with these details?</h3>
-            <div class="confirm-buttons">
-                <button id="confirmYesBtn" class="btn-primary">Yes</button>
-                <button id="confirmCancelBtn" class="btn-secondary">Cancel</button>
+        <div class="checkout-modal-content">
+            <div class="checkout-left">
+                <h3>Cart Summary</h3>
+                <table class="modal-cart-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalCartBody">
+                        <!-- populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="checkout-right">
+                <div class="summary-box">
+                    <p class="subtotal"><strong>Subtotal:</strong> <span id="modalSubtotal">₱0.00</span></p>
+                    <p class="vat"><strong>VAT (12%):</strong> <span id="modalTax">₱0.00</span></p>
+                    <p class="total"><strong>Total:</strong> <span class="total-value" id="modalTotal">₱0.00</span></p>
+                </div>
+
+                <div class="amount-tendered-box">
+                    <label for="amountTendered"><strong>Amount Tendered</strong></label>
+                    <input type="number" id="amountTendered" min="0" step="0.01" />
+                    <p id="changeAmount"><strong>Change:</strong> <span id="change-value">₱0.00</span></p>
+                </div>
+
+                <div class="confirm-buttons">
+                    <button id="confirmYesBtn" class="btn-primary" disabled>Confirm</button>
+                    <button id="confirmCancelBtn" class="btn-secondary">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -199,8 +229,40 @@
     }
 
     function checkout() {
-        const modal = document.getElementById('confirmModal');
-        if (modal) modal.classList.remove('hidden');
+        fetch('/get_pos_cart')
+            .then(res => res.json())
+            .then(cart => {
+                const modalBody = document.getElementById('modalCartBody');
+                const subtotalEl = document.getElementById('modalSubtotal');
+                const taxEl = document.getElementById('modalTax');
+                const totalEl = document.getElementById('modalTotal');
+
+                let total = 0;
+                modalBody.innerHTML = '';
+
+                cart.forEach(item => {
+                    const row = document.createElement('tr');
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+
+                    row.innerHTML = `
+                        <td>${item.inv_desc}</td>
+                        <td>${item.quantity}</td>
+                        <td>₱${parseFloat(item.price).toFixed(2)}</td>
+                        <td>₱${itemTotal.toFixed(2)}</td>
+                    `;
+                    modalBody.appendChild(row);
+                });
+
+                const tax = total * 0.12;
+                const subtotal = total - tax;
+
+                subtotalEl.textContent = `₱${subtotal.toFixed(2)}`;
+                taxEl.textContent = `₱${tax.toFixed(2)}`;
+                totalEl.textContent = `₱${total.toFixed(2)}`;
+
+                document.getElementById('confirmModal').classList.remove('hidden');
+        });
     }
 
     function closeModal() {
@@ -319,8 +381,21 @@
 
         document.getElementById('confirmCancelBtn')?.addEventListener('click', closeModal);
         document.getElementById('confirmYesBtn')?.addEventListener('click', () => {
-            alert('Checkout confirmed! (Insert logic here)');
-            closeModal();
+            fetch('/finalize_checkout', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Checkout successful!');
+                        closeModal();
+                        updateCartUI(); // refresh UI
+                    } else {
+                        alert(data.message || "Checkout failed.");
+                    }
+                })
+                .catch(err => {
+                    console.error("Checkout error:", err);
+                    alert("Unexpected error occurred during checkout.");
+                });
         });
 
         window.addEventListener('click', function (e) {
@@ -341,6 +416,33 @@
         });
 
         updateCartUI();
+
+        const amountInput = document.getElementById('amountTendered');
+        const confirmBtn = document.getElementById('confirmYesBtn');
+
+        function validateAmountTendered() {
+            const totalText = document.getElementById('modalTotal').textContent;
+            const totalValue = parseFloat(totalText.replace(/[^\d.]/g, '')) || 0;
+            const amount = parseFloat(amountInput.value) || 0;
+            const changeDisplay = document.getElementById('changeAmount');
+
+            if (amount >= totalValue && totalValue > 0) {
+                confirmBtn.disabled = false;
+                amountInput.classList.remove('invalid');
+                amountInput.classList.add('valid');
+
+                const change = amount - totalValue;
+                changeDisplay.textContent = `Change: ₱${change.toFixed(2)}`;
+            } else {
+                confirmBtn.disabled = true;
+                amountInput.classList.remove('valid');
+                amountInput.classList.add('invalid');
+                changeDisplay.textContent = `Change: ₱0.00`;
+            }
+        }
+
+        // Listen for input changes
+        amountInput.addEventListener('input', validateAmountTendered);
     });
 </script>
 {% endblock %}

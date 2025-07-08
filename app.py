@@ -1193,6 +1193,112 @@ def remove_from_pos_cart():
     conn.close()
     return jsonify({'status': 'success'})
 
+@app.route('/finalize_checkout', methods=['POST'])
+def finalize_checkout():
+    # Step 1: Fetch cart items
+    cart_conn = sqlite3.connect(os.path.join('db', 'restock_db.db'))
+    cart_conn.row_factory = sqlite3.Row
+    cart_cursor = cart_conn.cursor()
+    cart_cursor.execute("""
+        SELECT inv_id, inv_desc, quantity, price FROM pos_cart
+    """)
+    cart_items = cart_cursor.fetchall()
+    cart_conn.close()
+
+    if not cart_items:
+        return jsonify({'status': 'error', 'message': 'Cart is empty'}), 400
+
+    # Step 2: Subtract inventory (from inv_dynamic) — same logic as before
+    inventory_path = os.path.join('db', 'inventory_db.db')
+    inv_conn = sqlite3.connect(inventory_path)
+    inv_cursor = inv_conn.cursor()
+
+    for item in cart_items:
+        inv_id = item['inv_id']
+        qty_needed = item['quantity']
+
+        # Select inventory batches sorted by earliest expiration date
+        inv_cursor.execute("""
+            SELECT actual_id, quantity FROM inv_dynamic
+            WHERE inv_id = ?
+            ORDER BY DATE(exp_date) ASC
+        """, (inv_id,))
+        batches = inv_cursor.fetchall()
+
+        for batch in batches:
+            if qty_needed <= 0:
+                break
+
+            actual_id, available = batch
+            to_subtract = min(qty_needed, available)
+
+            # Subtract from the batch
+            new_qty = available - to_subtract
+            inv_cursor.execute("""
+                UPDATE inv_dynamic
+                SET quantity = ?
+                WHERE actual_id = ?
+            """, (new_qty, actual_id))
+
+            qty_needed -= to_subtract
+
+    inv_conn.commit()
+    inv_conn.close()
+
+    # Step 3: Prepare sales logging path
+    now = datetime.now()
+    day_str = f"d{now.day:02d}"
+    month_str = now.strftime("%b").lower()  # e.g., 'jul'
+    year_str = str(now.year)
+    db_dir = os.path.join("db", "salesdb", "daily", f"sales_d{year_str}")
+    db_path = os.path.join(db_dir, f"{month_str}_{year_str}.db")
+
+    if not os.path.exists(db_path):
+        return jsonify({'status': 'error', 'message': 'Sales database not found'}), 500
+
+    # Step 4: Record the sale in the correct dXX table
+    sales_conn = sqlite3.connect(db_path)
+    sales_cursor = sales_conn.cursor()
+
+    for item in cart_items:
+        inv_id = item['inv_id']
+        inv_desc = item['inv_desc']
+        quantity = item['quantity']
+        price = item['price']
+
+        # Check if item already exists in today's sales table
+        sales_cursor.execute(f"""
+            SELECT quantity_sold FROM {day_str}
+            WHERE inv_id = ?
+        """, (inv_id,))
+        existing = sales_cursor.fetchone()
+
+        if existing:
+            # Update quantity
+            sales_cursor.execute(f"""
+                UPDATE {day_str}
+                SET quantity_sold = quantity_sold + ?
+                WHERE inv_id = ?
+            """, (quantity, inv_id))
+        else:
+            # Insert new record
+            sales_cursor.execute(f"""
+                INSERT INTO {day_str} (inv_id, inv_desc, quantity_sold, price)
+                VALUES (?, ?, ?, ?)
+            """, (inv_id, inv_desc, quantity, price))
+
+    sales_conn.commit()
+    sales_conn.close()
+
+    # Step 5: Clear cart
+    clear_conn = sqlite3.connect(os.path.join('db', 'restock_db.db'))
+    clear_cursor = clear_conn.cursor()
+    clear_cursor.execute("DELETE FROM pos_cart")
+    clear_conn.commit()
+    clear_conn.close()
+
+    return jsonify({'status': 'success', 'message': 'Checkout finalized'})
+
 @app.route('/account')
 @login_required
 def account():
