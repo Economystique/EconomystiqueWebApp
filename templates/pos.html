@@ -118,6 +118,14 @@
 
                     const plusBtn = card.querySelector('.qty-btn.plus');
                     if (plusBtn) plusBtn.disabled = stock <= 0;
+
+                    // Reset classes
+                    card.classList.remove('disabled', 'out-of-stock');
+                    
+                    const qtyInCart = (window.cartQuantities?.[id] || 0);
+                    if (stock <= 0 && qtyInCart === 0) {
+                        card.classList.add('disabled');
+                    }
                 });
 
                 // Apply cart data and adjust visible stock
@@ -134,8 +142,17 @@
 
                     const card = document.querySelector(`.product-card[data-id="${item.inv_id}"]`);
                     const remaining = originalStocks[item.inv_id] - item.quantity;
+                    // Update stock text
                     const stockEl = card?.querySelector('.product-infos .stock');
-                    if (stockEl) stockEl.textContent = `Stock: ${remaining}`;
+                    if (stockEl) {
+                        stockEl.textContent = `Stock: ${remaining <= 0 ? '0 (in cart)' : remaining}`;
+                    }
+
+                    // Update visual state
+                    card.classList.remove('out-of-stock');
+                    if (remaining <= 0) {
+                        card.classList.add('out-of-stock');
+                    }
 
                     const plusBtn = card.querySelector('.qty-btn.plus');
                     if (plusBtn) plusBtn.disabled = remaining <= 0;
@@ -157,10 +174,7 @@
         const stockEl = card?.querySelector('.stock');
         const currentStock = stockEl ? parseInt(stockEl.textContent.replace(/\D/g, '')) : 0;
 
-        if (currentStock <= 0) {
-            alert(`${name} is out of stock and cannot be added.`);
-            return;
-        }
+        if (currentStock <= 0) return;
 
         fetch('/add_to_pos_cart', {
             method: 'POST',
@@ -209,13 +223,13 @@
             const price = parseFloat(card.querySelector('.price').textContent.replace(/[^\d.]/g, ''));
 
             card.addEventListener('click', (e) => {
+                // prevent add if qty-selector was clicked
                 if (e.target.closest('.qty-selector')) return;
-                const stockNow = parseInt(card.querySelector('.stock')?.textContent.replace(/\D/g, ''));
-                if (stockNow > 0) {
-                    addToCart(id, name, price, stockNow);
-                } else {
-                    alert(`${name} is out of stock.`);
-                }
+
+                // prevent add if card is marked as disabled
+                if (card.classList.contains('disabled')) return;
+
+                addToCart(id, name, price, originalStocks[id]);
             });
         });
 
