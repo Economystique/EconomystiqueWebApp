@@ -39,14 +39,16 @@
 }
 
 .btn-category {
-    background-color: transparent;
-    color: #215E7D;
-    border: 1px solid #215E7D;
+    border: 1.5px solid #215E7D !important;
+    border-radius: 0.375rem !important;
+    background: transparent !important;
+    color: #215E7D !important;
+    box-sizing: border-box !important;
 }
     
 .btn-category:hover {
-    background-color: #215E7D;
-    color: white;
+    background-color: #215E7D !important;
+    color: white !important;
 }
 
 .btn-wastage {
@@ -71,44 +73,43 @@
 
 /*drop down (All Categories)*/
 .dropdown {
-        position: relative;
-        display: inline-block;
-        z-index: 10;
-        background-color: transparent;
-        color: #215E7D;
-        border: 1px solid #215E7D;
-        border-radius: 0.375rem;
-    }
+    position: relative;
+    display: inline-block;
+    z-index: 10;
+}
 
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-        border-radius: 4px;
-    }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    margin-top: 4px;
+    min-width: 100%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    z-index: 20;
+}
 
-    .dropdown-content a {
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-        cursor: pointer;
-    }
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
 
-    .dropdown-content a:hover {
-        background-color: #f1f1f1;
-    }
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
 
-    .show {
-        display: block;
-    }
+.show {
+    display: block;
+}
 
-    .active-category {
-        background-color: #e9ecef;
-    }
+.active-category {
+    background-color: #e9ecef;
+}
 
 /* Table Toolbar */
 .table-toolbar {
@@ -118,7 +119,9 @@
     margin-bottom: 1rem;
 }
 
-.table-container{
+.table-container {
+    position: relative;
+    padding-bottom: 60px; /* space for sticky pagination */
     overflow: auto;
     height: 85%;
 }
@@ -156,8 +159,14 @@
 .inventory-table {
     background-color: white;
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: 0.875rem;
+    border: 2px solid #839FA9 !important;
+    border-radius: 8px;
+    overflow: hidden;
+    background-clip: padding-box;
+
 }
 
 .inventory-table th {
@@ -251,9 +260,18 @@
 
 /*wowiiee paginatien <3*/
 .pagination-container {
+    position: fixed;
+    left: 55%;
+    bottom: 1rem;
+    transform: translateX(-50%);
+    z-index: 100;
+    background: transparent;
+    padding: 0.5rem 1rem;
+    border-radius: 12px 12px 0 0;
+    width: max-content;
     display: flex;
-    justify-content: center; 
-    margin-top: 1.5rem;
+    justify-content: center;
+    align-items: center;
 }
 
 .pagination {
@@ -622,4 +640,30 @@
         background-color: #000 !important;
         color: #fff !important;
     }
+}
+
+/* Make All Categories, Manage, and Search bar the same height */
+.search-input,
+.btn,
+.dropdown,
+.btn-category,
+.btn-restock {
+    height: 40px;
+    min-height: 40px;
+    font-size: 0.95rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    line-height: 40px;
+}
+
+.btn,
+.btn-category,
+.btn-restock {
+    line-height: 1.2;
 }

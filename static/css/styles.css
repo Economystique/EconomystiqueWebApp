@@ -229,7 +229,6 @@ body {
     background-color: transparent;
     margin-left: 259px;  /* Match exactly the sidebar width */
     margin-top: 45px;    /* Match exactly the header height */
-    padding: 1rem;
     overflow-y: hidden;
     height: calc(100vh - 57px);
     width: calc(100vw - 259px);
