@@ -878,8 +878,8 @@
     }
     
     .add-actions {
-        flex-direction: column;
-        gap: 8px;
+        flex-direction: column-reverse !important;
+        gap: 4px !important;
     }
     
     .add-confirm,
@@ -1014,8 +1014,8 @@
     }
     
     .add-actions {
-        flex-direction: column;
-        gap: 6px;
+        flex-direction: column-reverse !important;
+        gap: .4rem !important;
     }
     
     .add-confirm,
@@ -1275,6 +1275,8 @@
         position: relative !important;
         box-sizing: border-box !important;
         overflow-x: hidden !important;
+        overflow-y: auto !important;
+        max-height: 70vh !important;
     }
     .form-group input,
     .form-group select,
@@ -1342,6 +1344,10 @@
         padding: 7px 12px !important;
         font-size: 10px !important;
         border-radius: 3px 3px 0 0 !important;
+    }
+    .content-container-add {
+        overflow-y: auto !important;
+        max-height: 70vh !important;
     }
 }
 
