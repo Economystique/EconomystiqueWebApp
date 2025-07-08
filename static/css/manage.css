@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0.1rem !important;
 }
 
 .content-header h1 {
@@ -258,13 +258,21 @@
 
 /* ─────────────── TAB: NEW PRODUCT ───────────────*/
 .content-container-add {
-    background-color: white;
+    min-height: 450px;
+    height: auto !important;
+    padding: 5px 0px !important;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 1590px;
 }
 
-.add-new-wrapper { 
-    padding: 20px 10px;
-    background-color: transparent;
-    min-height: 200px;
+.add-new-wrapper {
+    max-width: 1500px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 9px 0 !important;
 }
 
 /*head*/
@@ -272,7 +280,9 @@
     display:flex; 
     align-items:center; 
     gap:8px; 
-    margin-bottom:18px; 
+    margin-bottom: 9px;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
 
 .add-head h3 { 
@@ -286,20 +296,20 @@
 }
 
 /*forms*/
-.add-form-grid { 
-    display:flex; 
-    gap:40px; 
-    flex-wrap:wrap; 
-    padding: 50px;
-    padding-top: 5px;
+.add-form-grid {
+    display: flex;
+    gap: 80px;
+    flex-wrap: wrap;
 }
 
-.add-col { 
-    flex:1 1 260px; 
-    display:flex; 
-    flex-direction:column; 
-    gap:22px; 
-    padding: 10px;
+.add-col {
+    flex: 1 1 500px;
+    min-width: 400px;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 10px 0;
 }
 
 .form-row label { 
