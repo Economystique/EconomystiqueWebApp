@@ -33,13 +33,13 @@
                     {% endfor %}
                 </div>
             </div>
-        </div>
-        <div class="action-buttons">
             <button onclick="location.href='{{ url_for('manage') }}'" class="btn btn-restock">
                 <span class="icon"><img class="icon-img" src="static/img/manageIcon.png" alt=""></span>
-                Manage
+                <span class="btn-text">Manage</span>
             </button>
+        </div>
 
+        <div class="action-buttons">
             <!--<button class="btn btn-wastage" id="openModalBtn">
                 <span class="icon"><img class="icon-img" src="static/img/declareWastageIcon.png" alt=""></span>
                 Declare Wastage
