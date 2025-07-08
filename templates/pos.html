@@ -42,7 +42,7 @@
                 <div class="product-infos">
                     <div class="product-info-col">
                         <h5>{{ product.name }}</h5>
-                        <p class="price">₱{{ "{:,.2f}".format(product.price) }}</p>
+                        <p class="price">₱{{ "%.2f"|format(product.price) }}</p>
                         <p class="stock">Stock: {{ product.stock }}</p>
                     </div>
                     <div class="qty-selector" data-id="{{ product.id }}">
@@ -95,7 +95,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> 
 {% endblock %}
 
 {% block extra_js %}
@@ -109,6 +109,18 @@
                 tbody.innerHTML = '';
                 let total = 0;
 
+                // Reset stock displays and '+' buttons
+                document.querySelectorAll('.product-card').forEach(card => {
+                    const id = card.getAttribute('data-id');
+                    const stock = originalStocks[id];
+                    const stockEl = card.querySelector('.product-infos .stock');
+                    if (stockEl) stockEl.textContent = `Stock: ${stock}`;
+
+                    const plusBtn = card.querySelector('.qty-btn.plus');
+                    if (plusBtn) plusBtn.disabled = stock <= 0;
+                });
+
+                // Apply cart data and adjust visible stock
                 cart.forEach(item => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -121,22 +133,12 @@
                     total += item.total;
 
                     const card = document.querySelector(`.product-card[data-id="${item.inv_id}"]`);
-                    if (card) {
-                        const stockEl = card.querySelector('.product-infos .stock');
-                        let remaining = originalStocks[item.inv_id] - item.quantity;
-                        if (remaining < 0) remaining = 0;
-                        if (stockEl) stockEl.textContent = `Stock: ${remaining}`;
+                    const remaining = originalStocks[item.inv_id] - item.quantity;
+                    const stockEl = card?.querySelector('.product-infos .stock');
+                    if (stockEl) stockEl.textContent = `Stock: ${remaining}`;
 
-                        if (remaining <= 0) {
-                            card.classList.add('out-of-stock');
-                            card.style.pointerEvents = 'none';
-                            card.style.opacity = '0.5';
-                        } else {
-                            card.classList.remove('out-of-stock');
-                            card.style.pointerEvents = '';
-                            card.style.opacity = '';
-                        }
-                    }
+                    const plusBtn = card.querySelector('.qty-btn.plus');
+                    if (plusBtn) plusBtn.disabled = remaining <= 0;
                 });
 
                 const tax = total * 0.12;
@@ -144,6 +146,8 @@
                 document.getElementById('subtotal').textContent = `₱${subtotal.toFixed(2)}`;
                 document.getElementById('tax').textContent = `₱${tax.toFixed(2)}`;
                 document.getElementById('total').textContent = `₱${total.toFixed(2)}`;
+
+                updateQtySelectors(cart);
             })
             .catch(err => console.error("Failed to update cart:", err));
     }
@@ -154,7 +158,7 @@
         const currentStock = stockEl ? parseInt(stockEl.textContent.replace(/\D/g, '')) : 0;
 
         if (currentStock <= 0) {
-            alert(`${name} is out of stock and cannot be added to the cart.`);
+            alert(`${name} is out of stock and cannot be added.`);
             return;
         }
 
@@ -165,13 +169,9 @@
         })
         .then(res => res.json())
         .then(data => {
-            if (data.status === 'success') {
-                updateCartUI();
-            } else {
-                alert(data.message || "Failed to add to cart.");
-            }
-        })
-        .catch(err => console.error("Error adding to cart:", err));
+            if (data.status === 'success') updateCartUI();
+            else alert(data.message || "Failed to add.");
+        });
     }
 
     function clearCart() {
@@ -180,17 +180,8 @@
             .then(data => {
                 if (data.status === 'cleared') {
                     updateCartUI();
-                    document.querySelectorAll('.product-card').forEach(card => {
-                        const id = card.getAttribute('data-id');
-                        const stockEl = card.querySelector('.stock');
-                        if (stockEl) stockEl.textContent = `Stock: ${originalStocks[id]}`;
-                        card.classList.remove('out-of-stock');
-                        card.style.pointerEvents = '';
-                        card.style.opacity = '';
-                    });
                 }
-            })
-            .catch(err => console.error("Error clearing cart:", err));
+            });
     }
 
     function checkout() {
@@ -207,28 +198,42 @@
         const searchInput = document.getElementById('searchProducts');
         const productCards = document.querySelectorAll('.product-card');
         window.originalStocks = {};
-
-        // --- Quantity Selector Logic ---
-        // Map to track current cart quantities
         window.cartQuantities = {};
 
-        // Attach event listeners to plus/minus buttons
+        productCards.forEach(card => {
+            const id = card.getAttribute('data-id');
+            const stock = parseInt(card.querySelector('.stock')?.textContent.replace(/\D/g, '')) || 0;
+            originalStocks[id] = stock;
+
+            const name = card.querySelector('h5').textContent;
+            const price = parseFloat(card.querySelector('.price').textContent.replace(/[^\d.]/g, ''));
+
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.qty-selector')) return;
+                const stockNow = parseInt(card.querySelector('.stock')?.textContent.replace(/\D/g, ''));
+                if (stockNow > 0) {
+                    addToCart(id, name, price, stockNow);
+                } else {
+                    alert(`${name} is out of stock.`);
+                }
+            });
+        });
+
         document.querySelectorAll('.qty-selector').forEach(selector => {
             const id = selector.getAttribute('data-id');
-            const plusBtn = selector.querySelector('.plus');
-            const minusBtn = selector.querySelector('.minus');
-            const qtyInput = selector.querySelector('.qty-input');
-            plusBtn.addEventListener('click', () => {
-                // Get product info from card
+            const plus = selector.querySelector('.plus');
+            const minus = selector.querySelector('.minus');
+            const input = selector.querySelector('.qty-input');
+
+            plus.addEventListener('click', () => {
                 const card = document.querySelector(`.product-card[data-id="${id}"]`);
                 const name = card.querySelector('h5').textContent;
                 const price = parseFloat(card.querySelector('.price').textContent.replace(/[^\d.]/g, ''));
                 const stock = parseInt(card.querySelector('.stock').textContent.replace(/\D/g, ''));
-                if (stock <= 0) return;
-                addToCart(id, name, price, stock);
+                if (stock > 0) addToCart(id, name, price, stock);
             });
-            minusBtn.addEventListener('click', () => {
-                // Only decrease if quantity > 0
+
+            minus.addEventListener('click', () => {
                 if ((window.cartQuantities[id] || 0) > 0) {
                     fetch('/remove_from_pos_cart', {
                         method: 'POST',
@@ -237,41 +242,76 @@
                     })
                     .then(res => res.json())
                     .then(data => {
-                        if (data.status === 'success') {
-                            updateCartUI();
-                        }
+                        if (data.status === 'success') updateCartUI();
                     });
                 }
             });
-            // Allow direct input
-            qtyInput.addEventListener('input', (e) => {
-                // Only allow numbers
-                qtyInput.value = qtyInput.value.replace(/[^\d]/g, '');
+
+            input.addEventListener('input', () => {
+                input.value = input.value.replace(/[^\d]/g, '');
             });
-            qtyInput.addEventListener('blur', () => {
-                handleQtyInputChange(id, qtyInput);
+
+            input.addEventListener('blur', () => {
+                handleQtyInputChange(id, input);
             });
-            qtyInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    qtyInput.blur();
-                }
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') input.blur();
             });
         });
 
-        productCards.forEach(card => {
-            const id = card.getAttribute('data-id');
-            if (id) {
-                // Use .product-infos .stock for the selector
-                const stockEl = card.querySelector('.product-infos .stock');
-                const stock = stockEl ? parseInt(stockEl.textContent.replace(/\D/g, '')) : 0;
-                originalStocks[id] = stock;
-                // 🔒 Immediately disable card if stock is 0
-                if (stock <= 0) {
-                    card.classList.add('out-of-stock');
-                    card.style.pointerEvents = 'none';
-                    card.style.opacity = '0.5';
+        function handleQtyInputChange(id, input) {
+            let val = parseInt(input.value) || 0;
+            const stock = originalStocks[id];
+            val = Math.min(Math.max(0, val), stock);
+
+            const current = cartQuantities[id] || 0;
+            const diff = val - current;
+
+            if (diff === 0) return;
+
+            const method = diff > 0 ? 'add_to_pos_cart' : 'remove_from_pos_cart';
+            const payload = {
+                inv_id: id,
+                inv_desc: document.querySelector(`.product-card[data-id="${id}"] h5`).textContent,
+                price: parseFloat(document.querySelector(`.product-card[data-id="${id}"] .price`).textContent.replace(/[^\d.]/g, ''))
+            };
+
+            const actions = Array.from({ length: Math.abs(diff) }, () => {
+                return fetch(`/${method}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            });
+
+            Promise.all(actions)
+                .then(() => updateCartUI())
+                .catch(err => console.error("Failed to update quantity:", err));
+        }
+        
+        // Reflect quantity values in selectors
+        window.updateQtySelectors = function(cart) {
+            document.querySelectorAll('.qty-input').forEach(i => i.value = 0);
+            cartQuantities = {};
+            cart.forEach(item => {
+                cartQuantities[item.inv_id] = item.quantity;
+                const selector = document.querySelector(`.qty-selector[data-id="${item.inv_id}"]`);
+                if (selector) {
+                    selector.querySelector('.qty-input').value = item.quantity;
                 }
-            }
+            });
+        };
+
+        document.getElementById('confirmCancelBtn')?.addEventListener('click', closeModal);
+        document.getElementById('confirmYesBtn')?.addEventListener('click', () => {
+            alert('Checkout confirmed! (Insert logic here)');
+            closeModal();
+        });
+
+        window.addEventListener('click', function (e) {
+            const modal = document.getElementById('confirmModal');
+            if (e.target === modal) closeModal();
         });
 
         searchInput?.addEventListener('input', () => {
@@ -286,101 +326,7 @@
             document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
         });
 
-        // Update quantity selectors when cart changes
-        window.updateQtySelectors = function(cart) {
-            // Reset all to 0
-            document.querySelectorAll('.qty-input').forEach(input => input.value = 0);
-            window.cartQuantities = {};
-            cart.forEach(item => {
-                window.cartQuantities[item.inv_id] = item.quantity;
-                const selector = document.querySelector(`.qty-selector[data-id="${item.inv_id}"]`);
-                if (selector) {
-                    selector.querySelector('.qty-input').value = item.quantity;
-                }
-            });
-        };
-
-        // Patch updateCartUI to also update qty selectors
-        const origUpdateCartUI = updateCartUI;
-        updateCartUI = function() {
-            fetch('/get_pos_cart')
-                .then(response => response.json())
-                .then(cart => {
-                    window.updateQtySelectors(cart);
-                    origUpdateCartUI();
-                });
-        };
-
-        // Handle direct input change
-        function handleQtyInputChange(id, qtyInput) {
-            let val = parseInt(qtyInput.value) || 0;
-            const card = document.querySelector(`.product-card[data-id="${id}"]`);
-            const name = card.querySelector('h5').textContent;
-            const price = parseFloat(card.querySelector('.price').textContent.replace(/[^\d.]/g, ''));
-            const stock = parseInt(card.querySelector('.stock').textContent.replace(/\D/g, ''));
-            val = Math.max(0, Math.min(val, stock));
-            const current = window.cartQuantities[id] || 0;
-            if (val > current) {
-                // Add as many as needed
-                const toAdd = val - current;
-                let addCount = 0;
-                function addNext() {
-                    if (addCount < toAdd) {
-                        addToCart(id, name, price, stock);
-                        addCount++;
-                        setTimeout(addNext, 80); // avoid flooding
-                    } else {
-                        updateCartUI();
-                    }
-                }
-                addNext();
-            } else if (val < current) {
-                // Remove as many as needed
-                const toRemove = current - val;
-                let removeCount = 0;
-                function removeNext() {
-                    if (removeCount < toRemove) {
-                        fetch('/remove_from_pos_cart', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ inv_id: id })
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                removeCount++;
-                                setTimeout(removeNext, 80);
-                            } else {
-                                updateCartUI();
-                            }
-                        });
-                    } else {
-                        updateCartUI();
-                    }
-                }
-                removeNext();
-            } else {
-                updateCartUI();
-            }
-        }
-
-        // Modal buttons
-        document.getElementById('confirmCancelBtn')?.addEventListener('click', closeModal);
-
-        document.getElementById('confirmYesBtn')?.addEventListener('click', () => {
-            // TODO: Replace with real checkout logic
-            alert('Checkout confirmed! (Insert logic here)');
-            closeModal();
-        });
-
-        // Optional: Close modal when clicking outside the modal content
-        const modal = document.getElementById('confirmModal');
-        window.addEventListener('click', function (e) {
-            if (e.target === modal) closeModal();
-        });
-
         updateCartUI();
     });
 </script>
 {% endblock %}
-

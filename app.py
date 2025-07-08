@@ -1166,6 +1166,33 @@ def clear_pos_cart():
     conn.close()
     return jsonify({'status': 'cleared'})
 
+@app.route('/remove_from_pos_cart', methods=['POST'])
+def remove_from_pos_cart():
+    data = request.get_json()
+    inv_id = data.get('inv_id')
+
+    conn = sqlite3.connect(os.path.join('db', 'restock_db.db'))
+    cursor = conn.cursor()
+
+    # Reduce quantity or delete if it reaches 0
+    cursor.execute("SELECT quantity FROM pos_cart WHERE inv_id = ?", (inv_id,))
+    result = cursor.fetchone()
+
+    if result:
+        if result[0] > 1:
+            cursor.execute("""
+                UPDATE pos_cart
+                SET quantity = quantity - 1
+                WHERE inv_id = ?
+            """, (inv_id,))
+        else:
+            cursor.execute("DELETE FROM pos_cart WHERE inv_id = ?", (inv_id,))
+
+        conn.commit()
+
+    conn.close()
+    return jsonify({'status': 'success'})
+
 @app.route('/account')
 @login_required
 def account():
@@ -1725,25 +1752,6 @@ def clear_restock_cart():
     conn.commit()
     conn.close()
     return jsonify({'success': True})
-
-@app.route('/remove_from_pos_cart', methods=['POST'])
-def remove_from_pos_cart():
-    data = request.get_json()
-    inv_id = data.get('inv_id')
-    conn = sqlite3.connect(os.path.join('db', 'restock_db.db'))
-    cursor = conn.cursor()
-    cursor.execute("SELECT quantity FROM pos_cart WHERE inv_id = ?", (inv_id,))
-    result = cursor.fetchone()
-    if result:
-        if result[0] > 1:
-            cursor.execute("UPDATE pos_cart SET quantity = quantity - 1 WHERE inv_id = ?", (inv_id,))
-        else:
-            cursor.execute("DELETE FROM pos_cart WHERE inv_id = ?", (inv_id,))
-        conn.commit()
-        conn.close()
-        return jsonify({'status': 'success'})
-    conn.close()
-    return jsonify({'status': 'not_found'})
 
 # if __name__ == '__main__':
 #     # Start Flask server in a separate thread
