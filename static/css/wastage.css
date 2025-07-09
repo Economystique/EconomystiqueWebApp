@@ -387,28 +387,32 @@
     .wastage-toolbar {
         flex-direction: row !important;
         align-items: center !important;
-        gap: 0.5rem !important;
+        gap: 0.2rem !important;
     }
     .wastage-search-section,
     .wastage-action-buttons {
-        flex: 1 1 0 !important;
+        flex: none !important;
         width: auto !important;
         min-width: 0 !important;
         max-width: 100% !important;
         display: flex !important;
         align-items: center !important;
         justify-content: flex-start !important;
+        gap: 0.2rem !important;
+        margin: 0 !important;
     }
     .wastage-action-buttons {
         justify-content: flex-end !important;
     }
     .wastage-search-container {
-        width: 100% !important;
+        width: 68vw !important;
         min-width: 0 !important;
-        margin-right: 0.5rem !important;
+        margin-right: 0 !important;
     }
     .wastage-search-input {
         width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
         height: 2.2em !important;
         font-size: 0.8rem !important;
         padding: 0.4rem 0.8rem !important;
