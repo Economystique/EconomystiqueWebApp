@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: row;
     gap: 20px;
+    padding-right: 1.5rem;
 }
 /* Content Header */
 .content-header {
@@ -34,8 +35,9 @@
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 700px;
     width: 100%;
+    overflow-y: auto;
 }
 
 .table-and-chart {
@@ -43,8 +45,9 @@
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 655px;
     width: 100%;
+    gap: 0.5rem;
 }
 
 .metrics-sidebar {
@@ -85,6 +88,7 @@
     border: 1.5px solid #89a3ad;
     width: 267px;
     margin-bottom: 2px;
+    gap: .8rem;
 }
 
 .toggle-btn {
@@ -102,11 +106,11 @@
 }
 
 .table-responsive {
-    flex: 1;
+    flex: 1 1 50%;
     height: 50%;
-    width: auto;
+    max-height: 50%;
     overflow-y: auto;
-    max-height: 350px;
+    width: 100%;
 }
 
 /* Center table headers horizontally */
@@ -129,9 +133,20 @@
 }
 
 .chart-container {
-    background-color: white;
-    height: 350px;
-    width: auto;
+    flex: 1 1 50%;
+    height: 50% !important;
+    min-height: 0 !important;
+    max-height: 50% !important;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.chart-container canvas {
+    height: 100% !important;
+    max-height: 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 .forecast-btn {
@@ -425,6 +440,7 @@
     .test-container {
         flex-direction: column;
         gap: 8px;
+        padding-right: 1rem;
     }
     
     .metrics-sidebar {
