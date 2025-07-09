@@ -153,6 +153,46 @@
     align-self: flex-end;
 }
 
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+@media (max-width: 575px) {
+  .toggle-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 2.1rem;
+    width: 100%;
+  }
+  .toggle-buttons {
+    margin: 0;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .datepickers-group {
+    margin: 0;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .table-and-chart {
+    height: 500px;
+    min-height: 0;
+    max-height: 500px;
+  }
+  .chart-container {
+    height: 220px !important;
+    min-height: 0 !important;
+    max-height: 250px !important;
+  }
+  .chart-container canvas {
+    height: 250px !important;
+    max-height: 250px !important;
+  }
+}
+
 @media (max-width: 768px) {
     .date-filter {
         flex-direction: column;
@@ -470,13 +510,16 @@
     
     .toggle-buttons {
         width: 100%;
-        max-width: 300px;
+        max-width: 20px;
         margin: 0 auto 6px auto;
+        gap: 0.2rem;
     }
-    
     .toggle-btn {
-        padding: 6px 12px;
+        padding: 6px 6px;
         font-size: 0.8rem;
+    }
+    .toggle-buttons .toggle-btn:last-of-type {
+        margin-right: .1rem;
     }
     
     .chart-container {
@@ -535,12 +578,12 @@
     }
     
     .toggle-buttons {
-        max-width: 280px;
+        max-width: 180px;
     }
     
     .toggle-btn {
         padding: 5px 10px;
-        font-size: 0.75rem;
+        font-size: 0.65rem;
     }
     
     .chart-container {

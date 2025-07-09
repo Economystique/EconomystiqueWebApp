@@ -18,18 +18,19 @@
 </div>
 <div class="test-container">
     <div class="sale-content">
-        <div class="toggle-buttons">
-            <button class="toggle-btn active" onclick="toggleView('daily')">Daily</button>
-            <button class="toggle-btn" onclick="toggleView('monthly')">Monthly</button>
-            <button class="toggle-btn" onclick="toggleView('yearly')">Yearly</button>
-            <!--day-->
-            <input type="date" id="datePickerDay" class="date-picker" style="display:inline-block;" onchange="handleDateChange()">
-            <!--month-->
-            <input type="text" id="monthPicker" class="date-picker" placeholder="MM/YYYY" autocomplete="off" style="display:none;">
-            <!--year-->
-            <select id="yearDropdown" class="year-dropdown" style="display:none;">
-                <option value="">Select Year</option>
-            </select>
+        <div class="toggle-row">
+            <div class="toggle-buttons">
+                <button class="toggle-btn active" onclick="toggleView('daily')">Daily</button>
+                <button class="toggle-btn" onclick="toggleView('monthly')">Monthly</button>
+                <button class="toggle-btn" onclick="toggleView('yearly')">Yearly</button>
+            </div>
+            <div class="datepickers-group">
+                <input type="date" id="datePickerDay" class="date-picker" style="display:inline-block;" onchange="handleDateChange()">
+                <input type="text" id="monthPicker" class="date-picker" placeholder="MM/YYYY" autocomplete="off" style="display:none;">
+                <select id="yearDropdown" class="year-dropdown" style="display:none;">
+                    <option value="">Select Year</option>
+                </select>
+            </div>
         </div>
 
         <div class="table-and-chart">
