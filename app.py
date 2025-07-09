@@ -10,7 +10,7 @@ import numpy as np
 from datetime import date, datetime, timedelta
 import random
 import torch
-from transformers import pipeline, GPTNeoForCausalLM, GPT2Tokenizer
+#from transformers import pipeline, GPTNeoForCausalLM, GPT2Tokenizer
 import smtplib
 from email.message import EmailMessage
 #import webview 
@@ -19,6 +19,7 @@ from dateutil.relativedelta import relativedelta
 import calendar
 import io
 from collections import defaultdict
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -730,55 +731,86 @@ def get_sales_data(period):
 def sales_forecast():
     product_id = request.args.get('product', type=int)
 
-    products = [
-        {'id': 1, 'name': 'Chocolate Cake'},
-        {'id': 2, 'name': 'Red Velvet'},
-        {'id': 3, 'name': 'Cheesecake'}
-    ]
+    # Load product list
+    conn = sqlite3.connect(os.path.join('db', 'inventory_db.db'))
+    cur = conn.cursor()
+    cur.execute("SELECT inv_id, inv_desc FROM inv_static")
+    products = [{'id': row[0], 'name': row[1]} for row in cur.fetchall()]
+    conn.close()
 
-    selected_product = next((p for p in products if p['id'] == product_id), None)
+    selected = next((p for p in products if p['id'] == product_id), None)
 
-    month_labels = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December']
+    # If no product selected or invalid, return empty chart (for page load)
+    if not product_id or not selected:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({
+                'labels': [],
+                'actual_data': [],
+                'forecast_data_full_line': []
+            })
+        return render_template('sales_forecast.html',
+                               products=products,
+                               selected_product_id=None,
+                               labels=[],
+                               actual_data=[],
+                               forecast_data_full_line=[],
+                               sales_trend_message=None)
 
-    actual_data = []
-    forecast_data_full_line = []
-    current_month = 5 
+    # Build time series from past 181 days including today
+    today = datetime.today().date()
+    dates = [today - timedelta(days=i) for i in range(180, -1, -1)]
+    sales = []
 
-    sales_trend_message = ""
+    for d in dates:
+        db_year = f"sales_d{d.year}"
+        db_month = f"{d.strftime('%b').lower()}_{d.year}.db"
+        db_path = os.path.join('db', 'salesdb', 'daily', db_year, db_month)
+        table = f"d{d.day:02d}"
+        total = 0
+        if os.path.exists(db_path):
+            try:
+                with sqlite3.connect(db_path) as c:
+                    cur = c.cursor()
+                    cur.execute(f"SELECT SUM(sales_total) FROM {table} WHERE inv_id = ?", (product_id,))
+                    res = cur.fetchone()
+                    total = res[0] if res and res[0] else 0
+            except sqlite3.Error:
+                total = 0
+        sales.append(total)
 
-    if selected_product:
-        for i in range(12):
-            actual_data.append(None if i > current_month else random.randint(100, 200))
-            forecast_data_full_line.append(random.randint(150, 250))
+    # Build pandas Series
+    ts = pd.Series(sales, index=pd.to_datetime(dates))
 
-        # Forecast trend analysis for next month only
-        if current_month + 1 < 12:
-            forecast_current = forecast_data_full_line[current_month]       
-            forecast_next = forecast_data_full_line[current_month + 1]     
+    # Holt-Winters forecast
+    model = ExponentialSmoothing(ts, trend='add', seasonal=None)
+    fit = model.fit(optimized=True)
+    forecast = fit.forecast(6)  # Next 6 days
 
-            if forecast_current and forecast_next:
-                diff = forecast_next - forecast_current
-                pct_change = (diff / forecast_current) * 100
-                trend = "INCREASE" if diff > 0 else "DECREASE"
-                trend_color = "#3fd55b" if diff > 0 else "red"
-                next_month_name = month_labels[current_month + 1]
+    # Build 13-day window: 6 past days + today + 6 future days
+    past_7_days = [today - timedelta(days=i) for i in range(6, -1, -1)]
+    actual_window_series = ts[ts.index.date >= past_7_days[0]]
 
-                sales_trend_message = (
-                    f"Sales are expected to <strong><span style='color: {trend_color};'>{trend}</span></strong> "
-                    f"in <strong>{next_month_name}</strong> by "
-                    f"<strong><span style='color: {trend_color};'>{abs(pct_change):.1f}%</span></strong> "
-                    f"based on forecasted values."
-                )
+    full_window = pd.concat([actual_window_series, forecast])
+    labels = [d.strftime('%b %d').lower() for d in full_window.index.date]
+    actual_data = actual_window_series.tolist()
+    forecast_data_full_line = actual_data + forecast.tolist()
 
+    # Return JSON for AJAX
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({
+            'labels': labels,
+            'actual_data': actual_data,
+            'forecast_data_full_line': forecast_data_full_line
+        })
 
-    return render_template('sales_forecast.html',
+    # Return full HTML for normal request
+    return render_template("sales_forecast.html",
                            products=products,
                            selected_product_id=product_id,
-                           labels=month_labels,
+                           labels=labels,
                            actual_data=actual_data,
                            forecast_data_full_line=forecast_data_full_line,
-                           sales_trend_message=sales_trend_message)
+                           sales_trend_message=None)
 
 @app.route('/performance_comparison')
 @login_required
