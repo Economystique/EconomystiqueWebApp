@@ -1,6 +1,6 @@
 flask==3.0.0
+gunicorn
 bcrypt==4.1.2
 pandas
-numpy
 python-dateutil
-gunicorn
+statsmodels
