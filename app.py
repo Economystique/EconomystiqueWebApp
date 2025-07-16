@@ -1902,9 +1902,6 @@ def clear_restock_cart():
 #                          resizable=True,
 #                          min_size=(640, 360))
 #     webview.start(on_loaded, gui='qt')
-@app.route('/')
-def home():
-    return 'Hello from Economystique!'
 
 if __name__ == '__main__':
     app.run(debug=True)
